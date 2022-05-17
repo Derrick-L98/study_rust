@@ -5,7 +5,7 @@ fn main() {
     println!("Hello, world!");
 }
 
-fn dangle() -> &String {
+fn dangle() -> String {
     let s = String::from("hello");
-    &s
+    s
 }

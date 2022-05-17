@@ -46,11 +46,11 @@ fn main() {
             );
     }
 
-    println!(
-        "3 branch strong = {}, weak = {}",
-        Rc::strong_count(&branch),
-        Rc::weak_count(&branch)
-        );
+    // println!(
+    //     "3 branch strong = {}, weak = {}",
+    //     Rc::strong_count(&branch),
+    //     Rc::weak_count(&branch)
+    //     );
 
     println!(
         "3 leaf strong = {}, weak = {}",

@@ -6,7 +6,7 @@ fn main() {
 
     let x = vec![1, 2, 3];
     let equal_to_x = move |z| {z==x};
-    println!("x === {:?}", x);
+    // println!("x === {:?}", x);//x移动,这里不能在使用
 
     let y = vec![1, 2, 3];
     assert!(equal_to_x(y));
