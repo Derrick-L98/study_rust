@@ -1,0 +1,13 @@
+[package]
+name = "cassandra"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+cdrs = { version = "2" }
+cassandra_macro = "0.1.2"
+cassandra_macro_derive = "0.1.2"
+uuid = { version = "0.8.1", features = ["v4"] }
+chrono = "0.4.19"

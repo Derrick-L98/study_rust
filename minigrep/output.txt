@@ -1,0 +1,4 @@
+    fs::write("D:\\text.txt", "FROM RUST PROGRAM")
+这和一次性读取一样简单方便。执行程序之后， D:\text.txt 文件的内容将会被重写为 FROM RUST PROGRAM 。所以，一次性写入请谨慎使用！因为它会直接删除文件内容（无论文件多么大）。如果文件不存在就会创建文件。
+    file.write(b"FROM RUST PROGRAM").unwrap();
+FROM RUST PROGRAM APPEND WORD
