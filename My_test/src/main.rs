@@ -41,7 +41,7 @@ use cached::{proc_macro::cached, proc_macro::once, Cached, SizedCache, TimedCach
 #[tokio::main]
 async fn main() {
 
-    naive_date_time();
+    // naive_date_time();
     // performance();
     // dash_map();
     // time();
@@ -76,12 +76,12 @@ async fn main() {
     // println!("s = {0} {1} {0} {1} {0} {1} {0}", s, 0);
     // println!("我的名字叫{name}, 今年{age}岁, 喜欢{hobby}", hobby = "打篮球", name = "张三", age = 18);
 
-    // cache().await;
+    cache().await;
 
     //格式化输出保留小数后6位,不足补0
-    let kk = format!("{:0<.6} {:.06} {:<.6} {:.6}", 1.0, 2.0, 3.0, 4.0);
-    let k = format!("{:04} {:02} {:02} {:02} {:.20}", 1, 2, 3, 4, "fda");
-    println!("{}\n{}", kk, k);
+    // let kk = format!("{:0<.6} {:.06} {:<.6} {:.6}", 1.0, 2.0, 3.0, 4.0);
+    // let k = format!("{:04} {:02} {:02} {:02} {:.20}", 1, 2, 3, 4, "fda");
+    // println!("{}\n{}", kk, k);
 }
 
 async fn cache() {
@@ -96,13 +96,20 @@ async fn cache() {
     data.total_turnover = 100000000.0;
     data.total_volume = 5000.0;
     tickdata_cache2.cache_set(data.stock_code.clone(), data.clone());
-
-    let s = tickdata_cache2.cache_get_mut(&"601388_XSHG".to_string()).unwrap();
-    s.open_price = 1555555555.0;
-    data.stock_code = "601389_XSHG".to_string();
-    tickdata_cache2.cache_set(data.stock_code.clone(), data.clone());
     data.open_price = 11111111.0;
-    let p = tickdata_cache2.cache_set(data.stock_code.clone(), data.clone()).unwrap();//返回前一个同k的值
+    tickdata_cache2.cache_set(data.stock_code.clone(), data.clone());
+    data.open_price = 11111.0;
+    tickdata_cache2.cache_set(data.stock_code.clone(), data.clone());
+    data.open_price = 1.0;
+    tickdata_cache2.cache_set(data.stock_code.clone(), data.clone());
+
+    // let s = tickdata_cache2.cache_get_mut(&"601388_XSHG".to_string()).unwrap();
+    // s.open_price = 1555555555.0;
+    // data.stock_code = "601389_XSHG".to_string();
+    // tickdata_cache2.cache_set(data.stock_code.clone(), data.clone());
+    // data.open_price = 11111111.0;
+    // let p = tickdata_cache2.cache_set(data.stock_code.clone(), data.clone()).unwrap();//返回前一个同k的值
+
     // data.stock_code = "601311_XSHG".to_string();
     // tickdata_cache2.cache_set(data.stock_code.clone(), data.clone());
     // data.stock_code = "601300_XSHG".to_string();
@@ -116,8 +123,11 @@ async fn cache() {
 
     println!("{:#?}", tickdata_cache2.get_store().get_order().borrow());
 
-    println!("{:#?}", p);
-    println!("{:#?}", tickdata_cache2.cache_get(&"601389_XSHG".to_string()).unwrap());
+    // println!("{:#?}", p);
+    // println!("{:#?}", tickdata_cache2.cache_get(&"601389_XSHG".to_string()).unwrap());
+    println!("{}", tickdata_cache2.cache_hits().unwrap());
+    println!("{}", tickdata_cache2.cache_misses().unwrap());
+    // println!("{}", );s
     // tickdata_cache2.cache_set(k, v)
     
 
