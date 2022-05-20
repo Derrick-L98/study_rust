@@ -11,32 +11,32 @@ use crate::config::Config;
 use crate::common::SummarizedTickData;
 
 use self::chrono::prelude::*;
-use self::wasm_bindgen_test::*;
+
 use self::chrono::offset::Local;
 use std::borrow::Borrow;
-use std::collections::btree_map::ValuesMut;
-use std::pin::Pin;
-use std::sync::Arc;
+
+
+
 
 use std::collections::{HashMap};
 use convert_case::{Case, Casing};
 use dashmap::DashMap;
 
 use chrono::{DateTime, TimeZone, Utc};
-use time::{Tm, at_utc, at, strptime};
+use time::{strptime};
 
 // use time::*;
-use std::thread;
+
 use thread_id::{self};
 use std::time::*;
 
-use crossbeam_channel::{unbounded, RecvError, tick};
-use tokio::sync::{mpsc, oneshot, RwLock};
-use tokio::sync::watch;
+
+
+
 use tokio::sync::broadcast;
 
 use setting::Settings;
-use cached::{proc_macro::cached, proc_macro::once, Cached, SizedCache, TimedCache, TimedSizedCache, UnboundCache};
+use cached::{Cached, TimedSizedCache};
 
 #[tokio::main]
 async fn main() {
@@ -102,7 +102,7 @@ async fn cache() {
     data.open_price = 11111.0;
     tickdata_cache2.cache_set(data.stock_code.clone(), data.clone());
     data.open_price = 1.0;
-    tickdata_cache2.cache_set(data.stock_code.clone(), data.clone());
+    tickdata_cache2.cache_set(data.stock_code.clone(), data);
 
     // let s = tickdata_cache2.cache_get_mut(&"601388_XSHG".to_string()).unwrap();
     // s.open_price = 1555555555.0;
@@ -181,7 +181,7 @@ async fn tokio_channel() {
     // println!("{:?}", r3.recv());
 
     let (tx, mut rx1) = broadcast::channel(16);
-    let mut rx2 = tx.subscribe();
+    let _rx2 = tx.subscribe();
     // let mut rx3 = tx.subscribe();
     let x = tx.clone();
     let mut rx2 = x.subscribe();
@@ -257,8 +257,8 @@ async fn async_channel() {
     let rx2 = rx1.clone();
     let rx3 = rx1.clone();
     let rx4 = rx1.clone();
-    let rx5 = rx1.clone();
-    let rx6 = rx1.clone();
+    let _rx5 = rx1.clone();
+    let _rx6 = rx1.clone();
     tokio::spawn(async move {
         for i in 1..100000000 {
             if let Err(e) = tx.send(i).await {
@@ -278,19 +278,19 @@ async fn async_channel() {
         loop{
             tokio::select! {
                 task1 = rx1.recv() => {
-                    if let Ok(data) = task1 {
+                    if let Ok(_data) = task1 {
                         // println!("rx1 接收: {}", data);
                         // drop(data)
                     }
                 }
                 task2 = rx2.recv() => {
-                    if let Ok(data) = task2 {
+                    if let Ok(_data) = task2 {
                         // println!("rx2 接收: {}", data);
                         // drop(data)
                     }
                 }
                 task3 = rx3.recv() => {
-                    if let Ok(data) = task3 {
+                    if let Ok(_data) = task3 {
                         // println!("rx3 接收: {}", data);
                         // drop(data)
                     }
@@ -302,7 +302,7 @@ async fn async_channel() {
         loop{
             tokio::select! {
                 task4 = rx4.recv() => {
-                    if let Ok(data) = task4 {
+                    if let Ok(_data) = task4 {
                         // println!("rx4 接收: {}", data);
                         // drop(data)
                     }
@@ -338,7 +338,7 @@ async fn async_channel() {
 
 //可变引用与不可变引用
 fn mut_no_mut() {
-    let mut val = String::from("4.160|4.150|4.150|0|20210323093000+4.147|4.150|284|20210323093100+4.148|4.160|24|20210323093200+4.148|4.150|9|20210323093400");
+    let val = String::from("4.160|4.150|4.150|0|20210323093000+4.147|4.150|284|20210323093100+4.148|4.160|24|20210323093200+4.148|4.150|9|20210323093400");
     println!("原来：{}",val);    
     let mut val = mut_s(val).unwrap();
         
@@ -347,12 +347,12 @@ fn mut_no_mut() {
         s.push_str("oob");
         // c.push_str("oob");
 
-        let v = &val;
-        let f = &val;
+        let _v = &val;
+        let _f = &val;
         println!("更改：{}",val);
 
         let s1 = String::from("run");
-        let mut s2 = &s1;
+        let s2 = &s1;
         println!("{}", s2);
         // s2.push_str("oob"); // 错误，禁止修改租借的值
         println!("{}", s2);
@@ -371,7 +371,7 @@ struct S {
 }
 impl S {
     fn new() -> Self{
-        let mut map = DashMap::new();
+        let map = DashMap::new();
         map.insert("a".to_string(), "aaaaaaaaaaaaaa".to_string());
         map.insert("b".to_string(), "bbbbbbbbbbbbbb".to_string());
         S{
@@ -379,12 +379,12 @@ impl S {
         }
     }
     fn str(&self, key: String) {
-        if let Some(val) = self.map.get(&key) {
+        if let Some(_val) = self.map.get(&key) {
 
         }
     }
     fn ptr(&self, key: &String) {
-        if let Some(val) = self.map.get(key) {
+        if let Some(_val) = self.map.get(key) {
             
         }
     }
@@ -488,8 +488,8 @@ pub fn naive_date_time() {
     let now = Local::now().timestamp_millis();
     println!("{}", now);
     //给定字符串构造时间结构
-    let mut time_uct: DateTime<Utc> = ("2022-05-05 14:21:48.000".to_owned() + "Z").parse().unwrap();//正常
-    let mut time: DateTime<Local> = ("2022-05-05 14:21:48.000".to_owned() + "Z").parse().unwrap();
+    let _time_uct: DateTime<Utc> = ("2022-05-05 14:21:48.000".to_owned() + "Z").parse().unwrap();//正常
+    let time: DateTime<Local> = ("2022-05-05 14:21:48.000".to_owned() + "Z").parse().unwrap();
     let data = time.naive_local();
     println!("{}", data);//2022-05-05 22:21:48
     println!("{:?}", data);//2022-05-05T22:21:48
@@ -647,7 +647,7 @@ fn performance() {
     println!("耗时： {:?}", now.elapsed());//3.2µs
 
     let now1 = Instant::now();
-    ptr(&s);                                    //0x218a6791180
+    ptr(s);                                    //0x218a6791180
     println!("耗时： {:?}\n", now1.elapsed());//
 
 
@@ -786,15 +786,15 @@ fn time() {
 
     // Pin::new(&st).get_mut();
 
-    let s = time.tm_sec - 30;
+    let _s = time.tm_sec - 30;
     // let p = time.asctime();
     // println!("{:#?}",s);
     let p = time.to_timespec();
     println!("{:#?}",p);
 
-    let mut t = time::get_time();
+    let t = time::get_time();
     println!("{:#?}", t);
-    let _ = (t.sec -30);
+    let _ = t.sec -30;
     println!("{:#?}", t);
 
     
@@ -811,8 +811,8 @@ fn time() {
     println!("{:#?}",time);
 
     // time.tm_sec = 10;
-    let mut time = time::now();
-    let mut time2 = time::now();
+    let time = time::now();
+    let time2 = time::now();
     println!("{:#?}", (time2 - time));
 
     // println!("{:#?}",time.to_local());
@@ -826,7 +826,7 @@ fn time() {
 fn dash_map() {
     
     //锁
-    let mut map = DashMap::new();
+    let map = DashMap::new();
     let mut q = Test::new();
     map.insert("a".to_string(), q.clone());
     q.str = 1;
@@ -851,7 +851,7 @@ fn dash_map() {
     // drop(m);
 
     let now = Instant::now(); 
-    if let Some(m) = map.get_mut("300") {
+    if let Some(_m) = map.get_mut("300") {
         println!("找到了");
         println!("找到了");
         println!("找到了");
@@ -868,7 +868,7 @@ fn dash_map() {
     
     let now = Instant::now(); 
     for mut s in map.iter_mut() {
-        let (k, v) = s.pair_mut();
+        let (k, _v) = s.pair_mut();
         if k == "30" {
             println!("找到了");
         }
@@ -985,7 +985,7 @@ fn string() {
         c, 
         d, 
         e);
-    let d = s.make_ascii_uppercase();//将此字符串就地转换为等效的ASCII大写字母。(在原来基础上改)
+    let _d = s.make_ascii_uppercase();//将此字符串就地转换为等效的ASCII大写字母。(在原来基础上改)
 
 
     let day = "20211125".to_string();
@@ -1008,7 +1008,7 @@ fn string() {
 
 fn text() {
     let mut tmp:i64 = 20211124220208;
-    let mut tt = Local::now();
+    let _tt = Local::now();
     let second = (tmp % 100) as u32;//秒
     tmp /= 100;
     let minute = (tmp % 100) as u32;//分

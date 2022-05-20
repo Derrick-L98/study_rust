@@ -22,7 +22,7 @@ impl Config {
     pub async fn deal(time: Vec<String>) -> Vec<TimePair>{
         let mut vec = Vec::new();
         for i in time.iter() {
-            let tmp: Vec<&str> = i.split('-').map(|s| s).collect();
+            let tmp: Vec<&str> = i.split('-').collect();
             vec.push(TimePair(tmp[0].to_string(), tmp[1].to_string()))
         }
         vec
