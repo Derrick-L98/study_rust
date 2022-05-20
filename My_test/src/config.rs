@@ -22,7 +22,7 @@ impl Config {
     pub async fn deal(time: Vec<String>) -> Vec<TimePair>{
         let mut vec = Vec::new();
         for i in time.iter() {
-            let tmp: Vec<&str> = i.split("-").map(|s| s).collect();
+            let tmp: Vec<&str> = i.split('').map(|s| s).collect();
             vec.push(TimePair(tmp[0].to_string(), tmp[1].to_string()))
         }
         vec
@@ -30,11 +30,11 @@ impl Config {
 
     async fn m(key: &String, setting: &Settings) -> HashMap<String, Vec<String>> {
         if let Some(s) = setting.tradetime.get(key) {
-            return s.to_owned();
+            s.to_owned()
         } else {
             println!("配置
             错误...");
-            return HashMap::new();
+            HashMap::new()
         }
     }
 

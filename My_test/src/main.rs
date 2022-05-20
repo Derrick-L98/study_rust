@@ -76,12 +76,13 @@ async fn main() {
     // println!("s = {0} {1} {0} {1} {0} {1} {0}", s, 0);
     // println!("我的名字叫{name}, 今年{age}岁, 喜欢{hobby}", hobby = "打篮球", name = "张三", age = 18);
 
-    cache().await;
+    // cache().await;
 
     //格式化输出保留小数后6位,不足补0
-    // let kk = format!("{:0<.6} {:.06} {:<.6} {:.6}", 1.0, 2.0, 3.0, 4.0);
-    // let k = format!("{:04} {:02} {:02} {:02} {:.20}", 1, 2, 3, 4, "fda");
+    let kk = format!("{:0<.6} {:.06} {:<.6} {:.6}", 1.0, 2.0, 3.0, 4.0);
+    let k = format!("{:04} {:02} {:02} {:02} {:.20}", 1, 2, 3, 4, "fda");
     // println!("{}\n{}", kk, k);
+    dbg!(k);//打印的位置和变量的名称
 }
 
 async fn cache() {
@@ -279,19 +280,19 @@ async fn async_channel() {
                 task1 = rx1.recv() => {
                     if let Ok(data) = task1 {
                         // println!("rx1 接收: {}", data);
-                        drop(data)
+                        // drop(data)
                     }
                 }
                 task2 = rx2.recv() => {
                     if let Ok(data) = task2 {
                         // println!("rx2 接收: {}", data);
-                        drop(data)
+                        // drop(data)
                     }
                 }
                 task3 = rx3.recv() => {
                     if let Ok(data) = task3 {
                         // println!("rx3 接收: {}", data);
-                        drop(data)
+                        // drop(data)
                     }
                 }
             }
@@ -303,7 +304,7 @@ async fn async_channel() {
                 task4 = rx4.recv() => {
                     if let Ok(data) = task4 {
                         // println!("rx4 接收: {}", data);
-                        drop(data)
+                        // drop(data)
                     }
                 }
             }
@@ -373,10 +374,9 @@ impl S {
         let mut map = DashMap::new();
         map.insert("a".to_string(), "aaaaaaaaaaaaaa".to_string());
         map.insert("b".to_string(), "bbbbbbbbbbbbbb".to_string());
-        let s = S{
+        S{
             map
-        };
-        s
+        }
     }
     fn str(&self, key: String) {
         if let Some(val) = self.map.get(&key) {
@@ -437,8 +437,8 @@ fn mut_s(val: String) ->Result<String, Box<dyn std::error::Error>> {
         //4.160|4.150|4.150|0|20210323093000+4.147|4.150|284|20210323093100+
         //4.148|4.160|24|20210323093200+4.148|4.150|9|20210323093400+................
         if !val.is_empty() {                                                            //返回true时为空
-            if val.contains("+") { //如果给定模式与该字符串片段的子片段匹配，则返回true。如果没有，则返回false。
-                value = val.split("+").collect();//按+分割为一周期
+            if val.contains('+') { //如果给定模式与该字符串片段的子片段匹配，则返回true。如果没有，则返回false。
+                value = val.split('+').collect();//按+分割为一周期
             }
         }
         if value.is_empty() {
@@ -461,7 +461,7 @@ fn mut_s(val: String) ->Result<String, Box<dyn std::error::Error>> {
     
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct Test {
     str: i32,
     ptr: i32,
@@ -686,21 +686,21 @@ fn hash_map() {
 }
 
 fn vec() {
-    let mut sklineValue: String = String::from("");
+    let mut skline_value: String = String::from("");
     let mut k_line_hq_info: Vec<String> = Vec::new();
     {
         let s = "hhhh";
         let t = "aaaa";
-        sklineValue = format!("hello {} world {}",s,t);
-        println!("sklineValue: {}",sklineValue);
-        k_line_hq_info.push(sklineValue);
+        skline_value = format!("hello {} world {}",s,t);
+        println!("skline_value: {}",skline_value);
+        k_line_hq_info.push(skline_value);
         println!("len: {}",k_line_hq_info.len());
     }{
         let s = "k";
         let t = "q";
-        sklineValue = format!("hello {} world {}",s,t);
-        println!("sklineValue: {}",sklineValue);
-        k_line_hq_info.push(sklineValue);
+        skline_value = format!("hello {} world {}",s,t);
+        println!("skline_value: {}",skline_value);
+        k_line_hq_info.push(skline_value);
         println!("len: {}",k_line_hq_info.len());
 
     }
@@ -996,12 +996,12 @@ fn string() {
  
 
     let s = 1;
-    let mut a = s;
+    let a = s;
     println!("{} {}",s, a);
 
 
     
-    let mut en_close_price: i32 = Default::default();
+    let en_close_price: i32 = Default::default();
     let s = String::default();
     println!("{} '{}'",en_close_price,s);
 }
