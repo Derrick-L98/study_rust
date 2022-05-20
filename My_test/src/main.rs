@@ -95,7 +95,8 @@ async fn main() {
 
     println!("{} {:?}", s, now.elapsed());
 
-    string_write().await;
+    // string_write().await;
+    string_cmp().await;
 }
 
 async fn cache() {
@@ -1097,4 +1098,19 @@ async fn string_write() {
     // let mut vec1: Vec<i32> = Vec::new();
     // let mut vec2: Vec<i32> = Vec::new();
     // println!("time: {:?}", now.elapsed());
+}
+
+
+async fn string_cmp() -> String{
+    if ("09:15:00".."09:30:00").contains(&"09:30:00") {
+        println!("在范围内...");
+    }
+    let btime = String::from("09:15:00");
+    let etime = String::from("09:30:00");
+    let time = String::from("09:20:00");
+
+    if (btime..etime).contains(time) {
+        println!("在范围内...");
+        return etime
+    }
 }
