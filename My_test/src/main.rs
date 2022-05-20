@@ -5,7 +5,7 @@ extern crate wasm_bindgen_test;
 mod setting;
 mod config;
 mod common;
-
+use std::iter::repeat;
 
 use crate::config::Config;
 use crate::common::SummarizedTickData;
@@ -15,7 +15,7 @@ use self::chrono::prelude::*;
 use self::chrono::offset::Local;
 use std::borrow::Borrow;
 
-
+use std::fmt::Write;
 
 
 use std::collections::{HashMap};
@@ -29,7 +29,7 @@ use time::{strptime};
 
 use thread_id::{self};
 use std::time::*;
-
+use std::time::Instant;
 
 
 
@@ -83,6 +83,19 @@ async fn main() {
     let k = format!("{:04} {:02} {:02} {:02} {:.20}", 1, 2, 3, 4, "fda");
     // println!("{}\n{}", kk, k);
     dbg!(k);//打印的位置和变量的名称
+
+    let mut s = String::new();
+    // let _ = write!(s, "0x{:X}", 1024);
+    let now = Instant::now(); 
+    let _ = write!(s, "{}", "aaa"); 
+    // let _ = write!(s, "{}", " bbb");
+    // let _ = write!(s, "{}", " ccc");
+    // let d = " ddd";
+    // let _ = write!(s, "{}", d);
+
+    println!("{} {:?}", s, now.elapsed());
+
+    string_write().await;
 }
 
 async fn cache() {
@@ -1028,4 +1041,60 @@ fn text() {
     println!("a:{}",a);
     let q = a.naive_local();
     println!("q:{}",q);
+}
+
+async fn string_write() {
+    //性能: write! > fmt > +
+
+    let mut str1 = String::new();
+    let now = Instant::now();
+    for val in 0..1000 {
+        let _ = write!(str1, "{}|", val);
+    }
+    println!("write: {}, time: {:?}", str1, now.elapsed());
+
+    let mut str2 = String::new();
+    let now = Instant::now();
+    for val in 0..1000 {
+        str2 = str2 + &val.to_string() + "|";
+    }
+    println!("+: {}, time: {:?}", str2, now.elapsed());
+
+
+    // let mut str3 = String::new();
+
+    // let now = Instant::now();
+    // for val in 0..1000 {
+    //     let _ = write!(str3, "|");
+    // }
+    // println!("+: {}, time: {:?}", str3, now.elapsed());
+
+    let mut str4 = String::new();
+    let now = Instant::now();
+    for val in 0..1000 {
+        str4 = str4 + &format!("{}|", val);
+    }
+    println!("fmt: {}, time: {:?}", str4, now.elapsed());
+
+    // time: 1.65µs
+    // time: 1.11µs
+    // Bad
+    // let now = Instant::now();
+    // let mut vec1 = Vec::with_capacity(10);
+    // let mut vec2 = Vec::with_capacity(10);
+    // println!("time: {:?}", now.elapsed());
+
+    // vec1.resize(10, 0);
+    // vec2.extend(repeat(0).take(10));
+
+    // // Good
+    // let now = Instant::now();
+    // let mut vec1 = vec![0; 10];
+    // let mut vec2 = vec![0; 10];
+    // println!("time: {:?}", now.elapsed());
+
+    // let now = Instant::now();
+    // let mut vec1: Vec<i32> = Vec::new();
+    // let mut vec2: Vec<i32> = Vec::new();
+    // println!("time: {:?}", now.elapsed());
 }
