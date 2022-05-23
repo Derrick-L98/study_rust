@@ -22,15 +22,25 @@ pub async fn console() {
 }
 
 pub async fn write_chars() -> io::Result<()> {
-    let term = Term::stdout();
-    let (heigth, width) = term.size();
+    let term = Term::stdout(); //返回新的无缓冲端子
+    let (heigth, width) = term.size(); //返回行和列中的终端大小或获取合理的默认值。
     for x in 0..width {
         for y in 0..heigth {
-            term.move_cursor_to(x as usize, y as usize)?;
+            term.move_cursor_to(x as usize, y as usize)?; //将光标移动到x和y
             let text = if (x + y) % 2 == 0 {
-                format!("{}", style(x % 10).black().on_red())
+                format!(
+                    "{}",
+                    style(x % 10) //包装对象以设置样式的格式。
+                        .black()
+                        .on_red()
+                )
             } else {
-                format!("{}", style(x % 10).red().on_black())
+                format!(
+                    "{}",
+                    style(x % 10) //包装对象以设置样式的格式。
+                        .red()
+                        .on_black()
+                )
             };
 
             term.write_str(&text)?;

@@ -106,7 +106,7 @@ async fn main() {
     // string_cmp().await;
 
     // console().await;
-    // write_chars().await;
+    write_chars().await;
     // p().await;
     // print_da().await;
 }
