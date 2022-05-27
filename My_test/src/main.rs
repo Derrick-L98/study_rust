@@ -6,6 +6,8 @@ mod common;
 mod config;
 mod outputcolor;
 mod setting;
+mod structure;
+
 use std::iter::repeat;
 
 use crate::common::SummarizedTickData;
@@ -47,7 +49,8 @@ use setting::Settings;
 
 use console::{style, Term};
 
-use outputcolor::{print_da, write_chars};
+use outputcolor::{console, print_da, write_chars};
+use structure::Structure;
 
 #[tokio::main]
 async fn main() {
@@ -71,10 +74,10 @@ async fn main() {
 
     // std::thread::sleep(Duration::from_millis(0));
 
-    // let setting = Settings::new().expect("失败");
+    let setting = Settings::new().expect("失败");
     // let config = Config::new().await;
     // config.config(&setting).await;
-    // println!("{:#?}", setting);
+    println!("{:#?}", setting);
 
     // let s = 0.32f64.to_string();
     // println!("s = {}", s);
@@ -106,9 +109,13 @@ async fn main() {
     // string_cmp().await;
 
     // console().await;
-    write_chars().await;
+    // write_chars().await;
     // p().await;
     // print_da().await;
+
+    // let mut structs = Structure::new().await;
+    // structs.push().await;
+    // structs.show().await;
 }
 async fn p() {
     let term = Term::stdout();

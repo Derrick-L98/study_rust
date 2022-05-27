@@ -31,6 +31,7 @@ pub async fn write_chars() -> io::Result<()> {
                 format!(
                     "{}",
                     style(x % 10) //包装对象以设置样式的格式。
+                        // .green()
                         .black()
                         .on_red()
                 )

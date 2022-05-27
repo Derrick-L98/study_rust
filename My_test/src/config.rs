@@ -28,27 +28,27 @@ impl Config {
         vec
     }
 
-    async fn m(key: &String, setting: &Settings) -> HashMap<String, Vec<String>> {
-        if let Some(s) = setting.tradetime.get(key) {
-            s.to_owned()
-        } else {
-            println!("配置
-            错误...");
-            HashMap::new()
-        }
-    }
+    // async fn m(key: &String, setting: &Settings) -> HashMap<String, Vec<String>> {
+    //     if let Some(s) = setting.tradetime.get(key) {
+    //         s.to_owned()
+    //     } else {
+    //         println!("配置
+    //         错误...");
+    //         HashMap::new()
+    //     }
+    // }
 
-    pub async fn config(&self, setting: &Settings) {
-        let hs = Config::m(&"hs".to_string(), setting).await;
-        let hk = Config::m(&"hk".to_string(), setting).await;
-        let us = Config::m(&"us".to_string(), setting).await;
+    // pub async fn config(&self, setting: &Settings) {
+    //     let hs = Config::m(&"hs".to_string(), setting).await;
+    //     let hk = Config::m(&"hk".to_string(), setting).await;
+    //     let us = Config::m(&"us".to_string(), setting).await;
 
-        println!("{:#?}", hs);
-        println!("{:#?}", hk);
-        println!("{:#?}", us);
+    //     println!("{:#?}", hs);
+    //     println!("{:#?}", hk);
+    //     println!("{:#?}", us);
 
 
-    }
+    // }
 
     
 }
