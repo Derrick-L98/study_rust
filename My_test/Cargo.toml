@@ -23,8 +23,17 @@ tokio = { version = "1.0", features = [
     "full"
 ] }
 async-channel = "1.6.1"
-serde = "1.0"
+# serde = "1.0"
 config = "0.13.1"
 cached = "0.34.0"
 console = "0.15.0"
 loom = "0.5.6"
+
+vsdbsled = "0.34.7-p1"
+sled = "0.34.7"
+zerocopy = "0.6.0"
+byteorder = "1.4.3"
+
+# 序列化
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"

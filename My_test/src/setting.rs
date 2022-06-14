@@ -4,9 +4,18 @@ use config::{Config, ConfigError, File};
 use serde::Deserialize;
 
 #[derive(Debug, Clone, Deserialize)]
-pub struct Settings {
-    pub tradetime: HashMap<String, HashMap<String, Vec<String>>>,
+pub struct QuotationTime {
+    pub quotation_time: HashMap<String, HashMap<String, Vec<String>>>,
 }
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct Settings {
+    // pub tradetime: HashMap<String, HashMap<String, Vec<String>>>,
+    pub time: HashMap<String, HashMap<String, Vec<String>>>,
+    // pub time: QuotationTime,
+}
+
+
 
 impl Settings {
     pub fn new() -> Result<Self, ConfigError> {

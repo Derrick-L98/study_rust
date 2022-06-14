@@ -1,11 +1,13 @@
 extern crate chrono;
 extern crate time;
 extern crate wasm_bindgen_test;
+// extern crate sled;
 //extern crate convert_case;
 mod common;
 mod config;
 mod outputcolor;
 mod setting;
+mod sled;
 mod structure;
 
 use std::iter::repeat;
@@ -54,7 +56,7 @@ use structure::Structure;
 
 #[tokio::main]
 async fn main() {
-    // naive_date_time();
+    naive_date_time();
     // performance();
     // dash_map();
     // time();
@@ -72,8 +74,9 @@ async fn main() {
     // async_channel().await;
     // println!("耗时{:?}", now.elapsed());
 
-    // std::thread::sleep(Duration::from_millis(0));
+    std::thread::sleep(Duration::from_millis(0));
 
+    /*
     let setting = Settings::new().expect("失败");
     // let config = Config::new().await;
     // config.config(&setting).await;
@@ -116,7 +119,16 @@ async fn main() {
     // let mut structs = Structure::new().await;
     // structs.push().await;
     // structs.show().await;
+    */
+    // sled::dbcache().await;
+
+    let s = vec![1, 2, 3, 4, 5, 6, 7];
+    let mut p = s.chunks(2);
+
+    let pp = p.next().unwrap();
+    println!("{:?}", pp);
 }
+
 async fn p() {
     let term = Term::stdout();
     term.write_line("Hello World!").unwrap();
@@ -557,6 +569,16 @@ pub fn naive_date_time() {
     println!("current ---> NaiveDateTime: {}", cop);
     println!("current ---> 时间戳: {}\n", cop.timestamp());
 
+    let sss = cop.format("%Y%m%d%H%M").to_string();
+    let da = sss.parse::<i64>().unwrap();
+    println!("SSSSS: {}", da * 100);
+
+    let end_time = (cop.year() as i64) * 10000000000
+        + (cop.month() as i64) * 100000000
+        + (cop.day() as i64) * 1000000
+        + (cop.hour() as i64) * 10000
+        + (cop.minute() as i64) * 100;
+    println!("SSSSS: {}", end_time);
     // let utc: DateTime<Utc> = Utc::now();
     // let local: DateTime<Local> = Local::now();
 
