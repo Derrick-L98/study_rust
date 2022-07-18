@@ -122,11 +122,30 @@ async fn main() {
     */
     // sled::dbcache().await;
 
-    let s = vec![1, 2, 3, 4, 5, 6, 7];
-    let mut p = s.chunks(2);
+    let s = vec![
+        1, 2, 3, 4, 5, 6, 7, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 99, 9, 9,
+        9, 9, 9, 9, 9, 99, 9, 9, 9, 9, 9, 9,
+    ];
+    let mut p: Vec<Vec<i32>> = s.chunks(8).map(|x| x.into()).collect();
 
-    let pp = p.next().unwrap();
-    println!("{:?}", pp);
+    // let pp = p.next().unwrap();
+    println!("{:?}", p);
+
+    // let str = "fafdsafd".to_string();
+    // println!("{:p}", &str);
+    // ptrc(&str).await;
+
+    tokio::spawn(async move {
+        for i in 0..1 {
+            let str = "fafdsafd".to_string();
+            println!("str:   {:p}", &str);
+            ptrc(&str).await;
+        }
+    });
+}
+
+async fn ptrc(str: &String) {
+    println!("str:   {:p}", str);
 }
 
 async fn p() {
@@ -527,8 +546,8 @@ pub fn naive_date_time() {
     println!("{}\n", data.timestamp()); //时间戳
 
     let mut dt =
-        NaiveDateTime::parse_from_str("2022-05-05 14:21:48.000", "%Y-%m-%d %H:%M:%S%.3f").unwrap();
-    println!("2022-05-05 14:21:48.000 ---> NaiveDateTime: {}", dt); //2022-05-05 14:21:48
+        NaiveDateTime::parse_from_str("2022-05-05 14:21:48", "%Y-%m-%d %H:%M:%S%.3f").unwrap();
+    println!("2022-05-05 14:21:48 ---> NaiveDateTime: {}", dt); //2022-05-05 14:21:48
     println!("时间戳: {}", dt.timestamp()); //时间戳
                                             // println!("周几: {:#?}", dt.iso_week());
 
@@ -579,6 +598,10 @@ pub fn naive_date_time() {
         + (cop.hour() as i64) * 10000
         + (cop.minute() as i64) * 100;
     println!("SSSSS: {}", end_time);
+
+
+    let mut new_st = chrono::Local::now().naive_local();
+    println!("new: {}\n", new_st);
     // let utc: DateTime<Utc> = Utc::now();
     // let local: DateTime<Local> = Local::now();
 
