@@ -56,9 +56,17 @@ use structure::Structure;
 
 #[tokio::main]
 async fn main() {
-    naive_date_time();
+	/*
+	let mut num: i8 = 0;
+	loop {
+		println!("{}", num);//release 模式下死循环 i8 -128 ~ 127
+							//debug 模式下 i8 0 ~ 127 数据溢出,程序崩溃
+		num += 1;
+	}
+	*/
+    // naive_date_time();
     // performance();
-    // dash_map();
+    dash_map();
     // time();
     // thread();
     // hash_map();
@@ -883,7 +891,7 @@ fn dash_map() {
     q.str = 1;
     q.ptr = 1;
     map.insert("b".to_string(), q.clone());
-    for i in 1..50 {
+    for i in 0..2 {
         q.str = i;
         q.ptr = i;
         let k = format!("{}", i);
@@ -897,10 +905,15 @@ fn dash_map() {
     } else {
         println!("没有");
     }
-    // println!("map : {:#?}",map);
+    println!("map : {:#?}",map);
 
-    // let mut m = map.get_mut("888").expect("没有");
-    // drop(m);
+    let mut m = map.get_mut("a").expect("没有");
+    drop(m);//释放,不释放阻塞
+    //get_mut 和 get 不能同时存在(DashMap多线程,存在相互等待锁的问题,不能同时存在, 只能同时存在一个可变,可以同时存在多个不可变, 可变和不可变不能同时)
+    // println!("=================");
+    // println!("================={}", map.len());
+    // let mut pppp = map.get("a").expect("没有");
+    // println!("================={}", map.len());
 
     let now = Instant::now();
     if let Some(_m) = map.get_mut("300") {
