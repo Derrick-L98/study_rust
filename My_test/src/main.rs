@@ -51,11 +51,36 @@ use setting::Settings;
 
 use console::{style, Term};
 
-use outputcolor::{console, print_da, write_chars};
+use outputcolor::{console, print_da, write_chars, test as TEST};
+use crate::outputcolor::do_stuff;
 use structure::Structure;
 
 #[tokio::main]
 async fn main() {
+    // p().await;
+    // cache().await;
+    // mut_no_mut();
+    dash_map();
+    // naive_date_time();
+    // performance();
+    // hash_map();
+    // vec();
+    // time();
+
+
+
+    // channel test
+    // tokio_channel().await;
+    // async_channel().await;
+    // println!("{}", meh(1000000000.10396412, 5));
+    // println!("{}", 1.precision(5));
+    // //格式化输出保留小数后6位,不足补0
+    // let kk = format!("{:0.6} {:0<.6} {:.06} {:<.6} {:.6}", 1.0619, 1.06193, 1.06193, 1.06193, 1.06193);
+    // let k = format!("{:04} {:02} {:02} {:02} {:.20}", 1, 2, 3, 4, "fda");
+    // println!("{}\n{}", kk, k);
+    // console().await;
+    // write_chars().await;
+    // do_stuff().await;
 	/*
 	let mut num: i8 = 0;
 	loop {
@@ -63,23 +88,18 @@ async fn main() {
 							//debug 模式下 i8 0 ~ 127 数据溢出,程序崩溃
 		num += 1;
 	}
+
+    // time test
+
 	*/
-    // naive_date_time();
-    // performance();
-    dash_map();
-    // time();
     // thread();
-    // hash_map();
-    // vec();
     // string();
     // text();
 
     // mut_no_mut();
 
-    // tokio_channel().await;
     // channel().await;
     // let now = Instant::now();
-    // async_channel().await;
     // println!("耗时{:?}", now.elapsed());
 
     std::thread::sleep(Duration::from_millis(0));
@@ -129,7 +149,7 @@ async fn main() {
     // structs.show().await;
     */
     // sled::dbcache().await;
-
+/* 
     let s = vec![
         1, 2, 3, 4, 5, 6, 7, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 99, 9, 9,
         9, 9, 9, 9, 9, 99, 9, 9, 9, 9, 9, 9,
@@ -150,7 +170,48 @@ async fn main() {
             ptrc(&str).await;
         }
     });
+    */
 }
+
+// 保留小数多少位
+fn meh(float: f64, precision: usize) -> String {
+    // compute absolute value
+    // let a = float.abs();
+
+    // // if abs value is greater than 1, then precision becomes less than "standard"
+    // let precision = if a >= 1. {
+    //     // reduce by number of digits, minimum 0
+    //     let n = (1. + a.log10().floor()) as usize;
+    //     println!("位1: {}", n);
+    //     if n <= precision {
+    //         precision
+    //     } else {
+    //         0
+    //     }
+    // // if precision is less than 1 (but non-zero), then precision becomes greater than "standard"
+    // } else if a > 0. {
+    //     // increase number of digits
+    //     let n = -(1. + a.log10().floor()) as usize;
+    //     println!("位2: {}", n);
+    //     precision + n
+    // // special case for 0
+    // } else {
+    //     0
+    // };
+
+    // format with the given computed precision
+    format!("{0:.1$}", float, precision)
+}
+
+pub trait Point<T> {
+    fn precision(&self, indix: usize) -> T;
+} 
+impl<T: std::str::FromStr + std::fmt::Display + std::default::Default> Point<T> for T {
+    fn precision(&self, indix: usize) -> T {
+        format!("{0:.1$}", self, indix).parse::<T>().unwrap_or_default()
+    }
+}
+
 
 async fn ptrc(str: &String) {
     println!("str:   {:p}", str);
@@ -209,199 +270,6 @@ async fn cache() {
     // tickdata_cache2.cache_set(k, v)
 }
 
-async fn tokio_channel() {
-    // let (s, r) = unbounded();
-    // s.send(1).unwrap();
-    // s.send(2).unwrap();
-    // s.send(3).unwrap();
-
-    // // The only sender is dropped, disconnecting the channel.
-    // //唯一的发送器被丢弃，断开了通道。
-    // drop(s);
-
-    // // The remaining messages can be received.
-    // //剩下的信息可以接收。
-    // println!("{:?}", r.recv());
-    // println!("{:?}", r.recv());
-    // println!("{:?}", r.recv());
-
-    // // There are no more messages in the channel.
-    // // 频道中没有更多消息。
-    // println!("{}", r.is_empty());
-
-    // // Note that calling `r.recv()` does not block.
-    // // Instead, `Err(RecvError)` is returned immediately.
-    // println!("{:?}", r.recv());
-
-    //多 - 多
-    // //不管接收端编号是多少, 排在前面的先接受
-    // let (s1, r1) = unbounded();
-    // let (s2, r2) = (s1.clone(), r1.clone());
-    // let (s3, r3) = (s2.clone(), r2.clone());
-
-    // s1.send(10).unwrap();
-    // s2.send(20).unwrap();
-    // s3.send(30).unwrap();
-
-    // // assert_eq!(r3.recv(), Ok(10));
-    // // assert_eq!(r1.recv(), Ok(20));
-    // // assert_eq!(r2.recv(), Ok(30));
-    // println!("{:?}", r1.recv());
-    // println!("{:?}", r2.recv());
-    // println!("{:?}", r3.recv());
-
-    let (tx, mut rx1) = broadcast::channel(16);
-    let _rx2 = tx.subscribe();
-    // let mut rx3 = tx.subscribe();
-    let x = tx.clone();
-    let mut rx2 = x.subscribe();
-    // let mut rx2 = tx.subscribe();
-
-    tokio::spawn(async move {
-        for i in 1..10 {
-            // println!("i = {}", i);
-            if let Err(e) = tx.send(i) {
-                println!("{}", e);
-            }
-        }
-    });
-    tokio::spawn(async move {
-        for i in 11..20 {
-            // println!("i = {}", i);
-            if let Err(e) = x.send(i) {
-                println!("{}", e);
-            }
-        }
-    });
-
-    tokio::spawn(async move {
-        loop {
-            tokio::select! {
-                task1 = rx1.recv() => {
-                    if let Ok(data) = task1 {
-                        println!("rx1 接收: {}", data);
-                    }
-                }
-                // task2 = rx2.recv() => {
-                //     if let Ok(data) = task2 {
-                //         println!("rx2 接收: {}", data);
-                //     }
-                // }
-                // task3 = rx3.recv() => {
-                //     if let Ok(data) = task3 {
-                //         println!("rx3 接收: {}", data);
-                //     }
-                // }
-            }
-        }
-    });
-
-    tokio::spawn(async move {
-        loop {
-            tokio::select! {
-                task2 = rx2.recv() => {
-                    if let Ok(data) = task2 {
-                        println!("rx2 接收: {}", data);
-                    }
-                }
-                // task3 = rx3.recv() => {
-                //     if let Ok(data) = task3 {
-                //         println!("rx3 接收: {}", data);
-                //     }
-                // }
-            }
-        }
-    });
-
-    std::thread::sleep(Duration::from_millis(10));
-    // tx.send(10).unwrap();
-    // tx.send(20).unwrap();
-}
-
-async fn async_channel() {
-    let (tx, rx1) = async_channel::unbounded::<i32>();
-    // let tx1 = tx.clone();
-
-    let rx2 = rx1.clone();
-    let rx3 = rx1.clone();
-    let rx4 = rx1.clone();
-    let _rx5 = rx1.clone();
-    let _rx6 = rx1.clone();
-    tokio::spawn(async move {
-        for i in 1..100000000 {
-            if let Err(e) = tx.send(i).await {
-                println!("error: {}", e);
-            }
-        }
-    });
-    // tokio::spawn(async move {
-    //     for i in 101..200 {
-    //         if let Err(e) = tx1.send(i).await {
-    //             println!("error: {}", e);
-    //         }
-    //     }
-    // });
-
-    tokio::spawn(async move {
-        loop {
-            tokio::select! {
-                task1 = rx1.recv() => {
-                    if let Ok(_data) = task1 {
-                        // println!("rx1 接收: {}", data);
-                        // drop(data)
-                    }
-                }
-                task2 = rx2.recv() => {
-                    if let Ok(_data) = task2 {
-                        // println!("rx2 接收: {}", data);
-                        // drop(data)
-                    }
-                }
-                task3 = rx3.recv() => {
-                    if let Ok(_data) = task3 {
-                        // println!("rx3 接收: {}", data);
-                        // drop(data)
-                    }
-                }
-            }
-        }
-    });
-    tokio::spawn(async move {
-        loop {
-            tokio::select! {
-                task4 = rx4.recv() => {
-                    if let Ok(_data) = task4 {
-                        // println!("rx4 接收: {}", data);
-                        // drop(data)
-                    }
-                }
-            }
-        }
-    });
-    // tokio::spawn(async move {
-    //     loop{
-    //         tokio::select! {
-    //             task5 = rx5.recv() => {
-    //                 if let Ok(data) = task5 {
-    //                     println!("rx5 接收: {}", data);
-    //                 }
-    //             }
-    //         }
-    //     }
-    // });
-    // tokio::spawn(async move {
-    //     loop{
-    //         tokio::select! {
-    //             task6 = rx6.recv() => {
-    //                 if let Ok(data) = task6 {
-    //                     println!("rx6 接收: {}", data);
-    //                 }
-    //             }
-    //         }
-    //     }
-    // });
-    std::thread::sleep(Duration::from_millis(10));
-}
 
 //可变引用与不可变引用
 fn mut_no_mut() {
@@ -508,9 +376,11 @@ fn mut_s(val: String) -> Result<String, Box<dyn std::error::Error>> {
         if let Some(index) = i.rfind('|') {
             //返回此字符串片段中模式最右边匹配项的第一个字符的字节索引。
             let update_time: i64 = i[index + 1..].to_string().parse().expect("解析失败"); //取由|分割开的最后一个值
+            println!("{}", update_time);
             let local_time = "20211129103".to_string();
             //i.replace(i[index+1..],&local_time);
-            let mut str_tmp = i.trim_end_matches(&update_time.to_string()).to_string(); //删除末尾的字符串片段
+            let mut str_tmp = i.trim_end_matches(&update_time.to_string()).to_string(); //删除末尾匹配的字符串片段, 返回剩下的
+            println!("{}", str_tmp);
             str_tmp.push_str(&local_time);
             val_tmp.push_str(&str_tmp);
         }
@@ -545,9 +415,13 @@ pub fn naive_date_time() {
     let _time_uct: DateTime<Utc> = ("2022-05-05 14:21:48.000".to_owned() + "Z")
         .parse()
         .unwrap(); //正常
+        // println!("{}", _time_uct);
+        // println!("{:?}", _time_uct);
     let time: DateTime<Local> = ("2022-05-05 14:21:48.000".to_owned() + "Z")
         .parse()
         .unwrap();
+        // println!("{}", time);
+        // println!("{:?}", time);
     let data = time.naive_local();
     println!("{}", data); //2022-05-05 22:21:48
     println!("{:?}", data); //2022-05-05T22:21:48
@@ -597,6 +471,11 @@ pub fn naive_date_time() {
     println!("current ---> 时间戳: {}\n", cop.timestamp());
 
     let sss = cop.format("%Y%m%d%H%M").to_string();
+    let d = cop.format("%Y%m%d").to_string();
+    let t = cop.format("%H%M%S").to_string();
+    println!("ssss: {}", sss);
+    println!("dddd: {}", d);
+    println!("tttt: {}", t);
     let da = sss.parse::<i64>().unwrap();
     println!("SSSSS: {}", da * 100);
 
@@ -699,18 +578,19 @@ pub fn naive_date_time() {
 //引用和克隆性能分析
 fn performance() {
     let s = String::from("fdafdafdsafds");
-    println!("{:?}", s.as_ptr()); //0x22252ea4b80
+    println!("原字符地址: {:?}", s.as_ptr()); //0x22252ea4b80
+
     let now = Instant::now();
     str(s.clone()); //创建内存                   //0x22252ea4de0
-    println!("耗时： {:?}", now.elapsed()); //3.2µs
+    println!("克隆耗时： {:?}", now.elapsed()); //3.2µs
 
     let now1 = Instant::now();
     ptr(&s); //0x22252ea4b80
-    println!("耗时： {:?}\n", now1.elapsed()); //200ns
+    println!("引用耗时： {:?}\n", now1.elapsed()); //200ns
 
     //=====================================
     let s = &String::from("fdafdafdsafds");
-    println!("{:?}", s.as_ptr()); //0x218a6791180
+    println!("原字符地址: {:?}", s.as_ptr()); //0x218a6791180
     let now = Instant::now();
     str(s.to_string()); //创建内存                   //0x218a67911a0
     println!("耗时： {:?}", now.elapsed()); //3.2µs
@@ -718,6 +598,7 @@ fn performance() {
     let now1 = Instant::now();
     ptr(s); //0x218a6791180
     println!("耗时： {:?}\n", now1.elapsed()); //
+    //==========================================================
 
     let struct_s = S::new();
     let key = &String::from("a");
@@ -822,6 +703,7 @@ fn time() {
 
     let ttt: i64 = 1649815862; //992//1649813005;//463;
     let time_tmp = strptime(ttt.to_string().as_str(), "%s").unwrap();
+    // println!("{:#?}", time_tmp);
     let date3 = time_tmp.strftime("%F %T").unwrap().to_string();
     println!("date3: {:#?}", date3);
 
@@ -836,15 +718,6 @@ fn time() {
 
     let pp = time.rfc3339();
     println!("rfc3339 : {:#?}", pp.to_string()); //rfc3339 : "2022-04-03T11:00:31+08:00"
-
-    let pp = time.asctime();
-    println!("asctime : {:#?}", pp.to_string()); //asctime : "Sun Apr  3 11:00:31 2022"
-
-    let pp = time.asctime();
-    println!("asctime : {:#?}", pp.to_string());
-
-    let pp = time.asctime();
-    println!("asctime : {:#?}", pp.to_string());
 
     // Pin::new(&st).get_mut();
 
@@ -891,6 +764,26 @@ fn dash_map() {
     q.str = 1;
     q.ptr = 1;
     map.insert("b".to_string(), q.clone());
+    println!("============1");
+    // let mut s = "".to_owned();
+    // for i in map.iter() {
+    //     println!("============2");
+    //     if i.value().str == 1 {
+    //         println!("============3");
+    //         //  map.remove(&i.key());//死锁
+    //         s = i.key().to_string();
+    //         println!("============4");
+    //     }
+    //     println!("============5");
+
+    // }
+    // map.remove(&s);
+
+    // if map.contains_key("b") {
+        // 不会死锁
+    //     map.remove("b");
+    // }
+
     for i in 0..2 {
         q.str = i;
         q.ptr = i;
@@ -933,11 +826,19 @@ fn dash_map() {
     let now = Instant::now();
     for mut s in map.iter_mut() {
         let (k, _v) = s.pair_mut();
-        if k == "30" {
+        if k == "1" {
             println!("找到了");
         }
     }
     println!("耗时: {:?}\n\n", now.elapsed());
+
+    // if let Some(mut val) = map.get_mut("a") {
+    //     //会死锁
+    //     map.remove(val.key());
+    //     println!("已删除");
+    // } else {
+    //     println!("没有");
+    // };
 
     //==================================================这里可能出现死锁问题，同一作用域内，相互等待map
     // {
@@ -961,18 +862,18 @@ fn dash_map() {
     //=======================================================================================
 
     //------------------------------能改变map值,不会死锁
-    // let a = time::now();
-    // map.entry("a".to_string()).and_modify(|val| {
-    //     val.ptr = 111;
-    //     val.str = 222;
-    // });
-    // map.entry("b".to_string()).and_modify(|val| {
-    //     val.ptr = 111;
-    //     val.str = 222;
-    // }).or_insert_with(|| Test {
-    //     ptr: 555,
-    //     str: 666,
-    // });
+    let a = time::now();
+    map.entry("a".to_string()).and_modify(|val| {
+        val.ptr = 111;
+        val.str = 222;
+    });
+    map.entry("b".to_string()).and_modify(|val| {
+        val.ptr = 111;
+        val.str = 222;
+    }).or_insert_with(|| Test {
+        ptr: 555,
+        str: 666,
+    });
     // //------------------------------------------------------
     // let b = time::now();
     // println!("耗时:{}", b - a);
@@ -1155,4 +1056,215 @@ async fn string_cmp() -> String {
     }
 
     time
+}
+
+
+async fn async_channel() {
+    // 多对多，一个消息只能一个接收使用
+    let (tx, rx1) = async_channel::unbounded::<i32>();
+    let tx1 = tx.clone();
+
+    let rx2 = rx1.clone();
+    let rx3 = rx1.clone();
+    let rx4 = rx1.clone();
+    let _rx5 = rx1.clone();
+    let _rx6 = rx1.clone();
+    tokio::spawn(async move {
+        for i in 1..10 {
+            if let Err(e) = tx.send(i).await {
+                println!("error: {}", e);
+            }
+        }
+    });
+    tokio::spawn(async move {
+        for i in 10..20 {
+            if let Err(e) = tx1.send(i).await {
+                println!("error: {}", e);
+            }
+        }
+    });
+
+    tokio::spawn(async move {
+        loop {
+            tokio::select! {
+                task1 = rx1.recv() => {
+                    if let Ok(data) = task1 {
+                        println!("rx1 接收: {}", data);
+                        // drop(data)
+                    }
+                }
+                task2 = rx2.recv() => {
+                    if let Ok(data) = task2 {
+                        println!("rx2 接收: {}", data);
+                        // drop(data)
+                    }
+                }
+                task3 = rx3.recv() => {
+                    if let Ok(data) = task3 {
+                        println!("rx3 接收: {}", data);
+                        // drop(data)
+                    }
+                }
+            }
+        }
+    });
+    tokio::spawn(async move {
+        loop {
+            tokio::select! {
+                task4 = rx4.recv() => {
+                    if let Ok(data) = task4 {
+                        println!("rx4 接收: {}", data);
+                        // drop(data)
+                    }
+                }
+            }
+        }
+    });
+    // tokio::spawn(async move {
+    //     loop{
+    //         tokio::select! {
+    //             task5 = rx5.recv() => {
+    //                 if let Ok(data) = task5 {
+    //                     println!("rx5 接收: {}", data);
+    //                 }
+    //             }
+    //         }
+    //     }
+    // });
+    // tokio::spawn(async move {
+    //     loop{
+    //         tokio::select! {
+    //             task6 = rx6.recv() => {
+    //                 if let Ok(data) = task6 {
+    //                     println!("rx6 接收: {}", data);
+    //                 }
+    //             }
+    //         }
+    //     }
+    // });
+    std::thread::sleep(Duration::from_millis(10));
+}
+
+
+async fn tokio_channel() {
+    // let (s, r) = unbounded();
+    // s.send(1).unwrap();
+    // s.send(2).unwrap();
+    // s.send(3).unwrap();
+
+    // // The only sender is dropped, disconnecting the channel.
+    // //唯一的发送器被丢弃，断开了通道。
+    // drop(s);
+
+    // // The remaining messages can be received.
+    // //剩下的信息可以接收。
+    // println!("{:?}", r.recv());
+    // println!("{:?}", r.recv());
+    // println!("{:?}", r.recv());
+
+    // // There are no more messages in the channel.
+    // // 频道中没有更多消息。
+    // println!("{}", r.is_empty());
+
+    // // Note that calling `r.recv()` does not block.
+    // // Instead, `Err(RecvError)` is returned immediately.
+    // println!("{:?}", r.recv());
+
+    //多 - 多
+    // //不管接收端编号是多少, 排在前面的先接受
+    // let (s1, r1) = unbounded();
+    // let (s2, r2) = (s1.clone(), r1.clone());
+    // let (s3, r3) = (s2.clone(), r2.clone());
+
+    // s1.send(10).unwrap();
+    // s2.send(20).unwrap();
+    // s3.send(30).unwrap();
+
+    // // assert_eq!(r3.recv(), Ok(10));
+    // // assert_eq!(r1.recv(), Ok(20));
+    // // assert_eq!(r2.recv(), Ok(30));
+    // println!("{:?}", r1.recv());
+    // println!("{:?}", r2.recv());
+    // println!("{:?}", r3.recv());
+
+    // 多对多 ，一个消息可以多个接收使用
+    let (tx1, mut rx1) = broadcast::channel(16);
+  
+
+    let tx2 = tx1.clone();
+    let mut rx1 = tx2.subscribe();
+    let mut rx2 = tx2.subscribe();
+    let mut rx3 = tx1.subscribe();
+    let mut rx4 = tx1.subscribe();
+
+    tokio::spawn(async move {
+        for i in 1..10 {
+            // println!("i = {}", i);
+            if let Err(e) = tx1.send(i) {
+                println!("{}", e);
+            }
+        }
+    });
+    tokio::spawn(async move {
+        for i in 11..20 {
+            // println!("i = {}", i);
+            if let Err(e) = tx2.send(i) {
+                println!("{}", e);
+            }
+        }
+    });
+
+    tokio::spawn(async move {
+        loop {
+            tokio::select! {
+                task1 = rx1.recv() => {
+                    if let Ok(data) = task1 {
+                        println!("rx1 接收: {}", data);
+                    }
+                }
+                task2 = rx2.recv() => {
+                    if let Ok(data) = task2 {
+                        println!("rx2 接收: {}", data);
+                    }
+                }
+                task3 = rx3.recv() => {
+                    if let Ok(data) = task3 {
+                        println!("rx3 接收: {}", data);
+                    }
+                }
+            }
+        }
+    });
+
+    tokio::spawn(async move {
+        loop {
+            tokio::select! {
+                task4 = rx4.recv() => {
+                    if let Ok(data) = task4 {
+                        println!("rx4 接收: {}", data);
+                    }
+                }
+                // task5 = rx5.recv() => {
+                //     if let Ok(data) = task5 {
+                //         println!("rx5 接收: {}", data);
+                //     }
+                // }
+            }
+        }
+    });
+
+    std::thread::sleep(Duration::from_millis(10));
+    // tx.send(10).unwrap();
+    // tx.send(20).unwrap();
+}
+
+fn fmt() {
+    // You can right-justify text with a specified width. This will
+    // output "    1". (Four white spaces and a "1", for a total width of 5.)
+    println!("{number:>5}", number=1);
+    // You can pad numbers with extra zeroes,
+    //and left-adjust by flipping the sign. This will output "10000".
+    println!("{number:0<5}", number=1);
+    // You can use named arguments in the format specifier by appending a `$`
+    println!("{number:0>width$}", number=1, width=5);
 }

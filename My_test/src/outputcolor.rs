@@ -12,6 +12,8 @@ pub async fn console() {
     }
 
     for i in 0..=255 {
+        // 底色: 黑色
+        // 上边: 对应色
         print!("{:03} ", style(i).black().on_color256(i));
         if i % 16 == 15 {
             println!("");
@@ -19,6 +21,13 @@ pub async fn console() {
     }
 
     println!("{}", style("hello").color256(196));
+
+    for i  in 1..=9 {
+        for x in 1..=i {
+            print!("{} x {} = {:>2} ", style(x).color256(x), style(i).color256(x), style(i*x).color256(x))
+        }
+        println!("");
+    }
 }
 
 pub async fn write_chars() -> io::Result<()> {
@@ -33,6 +42,7 @@ pub async fn write_chars() -> io::Result<()> {
                     style(x % 10) //包装对象以设置样式的格式。
                         // .green()
                         .black()
+                        // .on_green()
                         .on_red()
                 )
             } else {
