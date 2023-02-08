@@ -10,9 +10,14 @@ mod setting;
 mod sled;
 mod structure;
 
+use rust_decimal::prelude::*;
+use rust_decimal_macros::dec;
 use std::iter::repeat;
+use std::mem::size_of_val;
+use std::sync::Arc;
 
 use crate::common::SummarizedTickData;
+use crate::common::UidgenService;
 use crate::config::Config;
 
 use self::chrono::prelude::*;
@@ -60,14 +65,15 @@ async fn main() {
     // p().await;
     // cache().await;
     // mut_no_mut();
-    dash_map();
+    // dash_map();
     // naive_date_time();
     // performance();
     // hash_map();
     // vec();
     // time();
 
-
+    // lock().await;
+    f64_decimal();
 
     // channel test
     // tokio_channel().await;
@@ -1267,4 +1273,98 @@ fn fmt() {
     println!("{number:0<5}", number=1);
     // You can use named arguments in the format specifier by appending a `$`
     println!("{number:0>width$}", number=1, width=5);
+}
+
+struct SS {
+    pub id: Arc<UidgenService>,
+}
+impl SS {
+    pub async fn new() ->Self{
+        SS {
+           id: Arc::new(UidgenService::new(1,1))
+        }
+    }
+}
+async fn lock() {
+    let uid = Arc::new(tokio::sync::RwLock::new(UidgenService::new(1,1)));
+    println!("========={}", size_of_val(&uid));
+    let mut w = uid.write().await;
+    println!("========={}", size_of_val(&w));
+    let mut w = UidgenService::new(1,1);
+    println!("========={}", size_of_val(&w));
+    println!("========={}", size_of_val("1111"));
+    // let s = SS::new().await;
+    // let mut w= s.id;
+    // println!("1===={:#?}", w.get_uid());
+    // println!("2===={:#?}", w.get_uid());
+    // println!("3===={:#?}", w.get_uid());
+    // println!("4===={:#?}", w.get_uid());
+    // println!("5===={:#?}", w.get_uid());
+    // tokio::spawn(async move {
+    //     for i in 1..5 {
+    //         let mut w = Arc::new(UidgenService::new(1,1));
+    //         println!("========={}", size_of_val(&w));
+    //         let s = SS::new().await;
+    //         let mut w= s.id.as_ref().to_owned();
+    //         println!("1===={:#?}", w.get_uid());
+    //         println!("2===={:#?}", w.get_uid());
+    //         println!("3===={:#?}", w.get_uid());
+    //         println!("4===={:#?}", w.get_uid());
+    //         println!("5===={:#?}", w.get_uid());
+    //     }
+    // });
+
+    let mut w = SummarizedTickData::new();
+    println!("原始=========size:{}", size_of_val(&w));
+    w.average_price = 1.1;
+    w.last_price = 111.255;
+    w.low_price = 65.2465;
+    println!("赋值=========size:{}", size_of_val(&w));
+    let s = Arc::new(w.clone());
+    println!("Arc=========size:{}", size_of_val(&s));
+    let pp = &w;
+    println!("引用=========size:{}", size_of_val(&pp));
+    let ppp = String::from("ffdsaf");
+    let v: Vec<i32> = vec![1,2,3,4,5,6,7];
+    let s = v.into_iter().find(|&x| x == 1);
+    // into_iter: 借用后不归还
+    // iter: 借用后归还
+    // println!("{:#?}", v);
+}
+
+
+fn f64_decimal(){
+    let s = Decimal::new(1234, 3);
+    println!("{}", s);
+    let v = dec!(2);
+    println!("{}", v);
+
+    println!("{}", s * v);
+
+
+    let pp = 123;
+    // println!("{}", v/Decimal::from(0));
+
+    // println!("{}", 1/0)
+    
+    //判断f32数据是否为0
+    if 0.0 <= 0.000001 || 0.0 >= -0.000001 {
+        println!("===============");
+        println!("{}", 48 as char);
+        println!("{}", 65 as char);
+        println!("{}", 97 as char);
+        let s = String::from("love: ❤️");
+        println!("{}", s);
+        println!("{}", s.to_ascii_uppercase());
+        println!("{}", s.to_ascii_lowercase());
+
+        let s = String::from("❤️");
+
+        for _ in 1..=50 {
+            for _ in 1..=50 {
+                print!("{}", s);
+            }
+            println!();
+        }
+    }
 }
