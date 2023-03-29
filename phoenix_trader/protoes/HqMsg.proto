@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package hqmsg;
+
+message HqMsgReq{
+	CtpHqInfo ctphqinfo = 1; 				//ctp行情
+	YsHqInfo  yshqinfo	= 2;				//易盛行情
+}
+
+message CtpHqInfo{
+	string		TradingDay = 1;				//交易日
+	string		InstrumentID = 2;			//合约代码
+	string		ExchangeID = 3;				//市场代码
+	string		ExchangeInstID = 4;			//合约在交易所的代码
+	double     	LastPrice = 5;				//最新价
+	double		PreSettlementPrice = 6;		//上次结算价
+	double 		PreClosePrice = 7;			//昨收盘
+	double		PreOpenInterest	 = 8;		//昨持仓量
+	double		OpenPrice	 = 9;			//今开盘
+	double		HighestPrice	= 10;       //最高价
+	double		LowestPrice = 11;			//最低价
+	int32		Volume	= 12;				//数量
+	double 		Turnover	= 13;			//成交金额
+	double		OpenInterest = 14;			//持仓量
+	double		ClosePrice	= 15;			//今收盘
+	double		SettlementPrice   = 16;		//本次结算价
+	double		UpperLimitPrice = 17;		//涨停板价
+	double		LowerLimitPrice = 18;		//跌停板价
+	double	    PreDelta = 19;   			//昨虚实度
+	double 		CurrDelta = 20;     		//今虚实度
+	string 		UpdateTime = 21;			//最后修改时间
+	int32 		UpdateMillisec = 22;		//最后修改毫秒
+	double 		BidPrice1 = 23;     		//申买价一
+	int32		BidVolume1	= 24;			//申买量一
+	double 		AskPrice1 = 25;     		//申卖价一
+	int32		AskVolume1	= 26;			//申卖量一
+	double 		BidPrice2 = 27;     		//申买价二
+	int32		BidVolume2	= 28;			//申买量二
+	double 		AskPrice2 = 29;     		//申卖价二
+	int32		AskVolume2	=30;			//申卖量二
+	double 		BidPrice3   =31;     		//申买价三
+	int32		BidVolume3	=32;			//申买量三
+	double 		AskPrice3   =33;     		//申卖价三
+	int32		AskVolume3	=34;			//申卖量三
+	double 		BidPrice4   =35;     		//申买价四
+	int32		BidVolume4	=36;			//申买量四
+	double 		AskPrice4   =37;     		//申卖价四
+	int32		AskVolume4	=38;			//申卖量四
+	double 		BidPrice5   =39;     		//申买价五
+	int32		BidVolume5	=40;			//申买量五
+	double 		AskPrice5  = 41;     		//申卖价五
+	int32		AskVolume5 = 42;			//申卖量五
+	double 		AveragePrice = 43;			//当日均价
+	string		ActionDay =44;				//业务日期
+}
+
+message YsHqInfo
+{
+	string        ExchangeID          = 1;           //市场代码
+    string        CommodityNo         = 2;           //品种编号
+    string        ContractNo1         = 3;           //合约代码
+    string        CurrencyNo          = 4;           //币种编号
+    string        TAPIDTSTAMP         = 5;           //时间戳
+    double        QPreSettlePrice     = 6;           //昨结算价
+	int64         QPrePositionQty     = 7;			//昨持仓量
+    double        QOpeningPrice       = 8;           //开盘价
+    double        QLastPrice          = 9;           //最新价
+    double        QHighPrice          = 10;          //最高价
+    double        QLowPrice           = 11;          //最低价
+    double        QLimitUpPrice       = 12;          //涨停价
+    double        QLimitDownPrice     = 13;          //跌停价
+    int64         QTotalQty           = 14;          //当日总成交量
+	double        QTotalTurnover	  = 15;			//当日成交金额
+	int64		  QPositionQty		  = 16;			//持仓量
+    double        QAveragePrice       = 17;          //均价
+	double        QClosingPrice       = 18;			//收盘价
+    double        QLastQty            = 19;          //最新成交量
+    repeated  double QBidPrice        = 20;          //买价1-5档
+    repeated  int64  QBidQty          = 21;          //买量1-5档
+    repeated  double QAskPrice        = 22;          //卖价1-5档
+    repeated  int64  QAskQty          = 23;          //卖量1-5档
+    double        QChangeRate         = 24;          //涨幅
+    double        QChangeValue        = 25;          //涨跌值
+    double        QPreClosingPrice    = 26;			 //昨收价
+	int64         QTotalBidQty        = 27;			//委买总量
+	int64         QTotalAskQty        = 28;			//委卖总量
+}
+ 

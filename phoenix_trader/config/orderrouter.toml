@@ -1,0 +1,3 @@
+[application]
+apphost = "172.16.1.9"
+appport = 8887

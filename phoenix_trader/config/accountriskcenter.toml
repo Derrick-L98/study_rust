@@ -1,0 +1,37 @@
+[database]
+uri = "mysql://companytest:ZNvC5NoLJNnO3Wn0@uat-stock-data.chinaeast2.cloudapp.chinacloudapi.cn:13301/phoenix_stock"
+
+[application]
+apphost = "0.0.0.0"
+appport = 8401
+httpport = 8101
+machineid = 14
+nodeid = 8401
+
+[system]
+ignore_user_account = "40005" #忽略的用户账户,如果多个账户，用","分割，注意中英文
+ignore_fee_account = "40005,40016,40385" #忽略费用的账户 运营贰:40016 运营叁:40385
+persist_interval = 10       #数据保存时间间隔，单位秒
+position_interval = 10       #计算持仓数据的间隔,单位秒
+account_total = "999999999"   #总账户的unit_id
+risk_restore = 0.5 #风险率低于预警线多少点，恢复正常交易状态
+assets_server="127.0.0.1:8403"
+aka_server="127.0.0.1:8402"
+log_server= "127.0.0.1:8420"
+
+#[redis]
+#redis集群，通过逗号分隔
+#The URL format is redis://[<username>][:<password>@]<hostname>[:port][/<db>]
+#uri = "redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7000/,redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7001/,redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7002/,redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7003/,redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7004/,redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7005/" 
+#uri = "redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7001/,redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7002"
+
+
+[messagecenter]
+addr = "amqp://pp:pp123@uat-stock-data.chinaeast2.cloudapp.chinacloudapi.cn:5672/%2f"
+exchanger = "phoenix_message_center"
+key = "mc.order.*,mc.asset.*,mc.aka.*" #多个key，通过英文逗号分割，全部订阅，用"*"
+
+
+[quotation]
+amqpaddr = "amqp://cc:LE9fWcN5Tx6fcSRE@kyc-mq.eoepro.com:55520/%2f" # "amqp://pp:pp123@data.metestsvr.com:5672/%2f" #"amqp://pp:pp123@uat-stock-data.chinaeast2.cloudapp.chinacloudapi.cn:5672/%2f" #
+exchanger = "StockLive"

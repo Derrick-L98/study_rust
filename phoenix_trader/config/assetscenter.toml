@@ -1,0 +1,24 @@
+
+[database]
+uri = "mysql://companytest:ZNvC5NoLJNnO3Wn0@dev-data.chinaeast2.cloudapp.chinacloudapi.cn:13301/phoenix_stock"
+
+[application]
+apphost = "127.0.0.1"
+appport = 8020
+machineid=1
+nodeid=8020
+
+[system]
+akaserver="http://40.72.97.246:8402"
+cachetime=3000 #缓存时间，单位秒
+
+[redis]
+#redis集群，通过逗号分隔
+#The URL format is redis://[<username>][:<password>@]<hostname>[:port][/<db>]
+uri = "redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7000/,redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7001/,redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7002/,redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7003/,redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7004/,redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7005/" 
+#uri = "redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7001/,redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7002"
+
+[msgcenter]
+amqpaddr = "amqp://pp:pp123@uat-stock-data.chinaeast2.cloudapp.chinacloudapi.cn:5672/%2f"
+assets_exchange = "phoenix_assets_msg"
+routing_key="" # 订阅的key

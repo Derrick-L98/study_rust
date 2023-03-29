@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package orderprocess;
+service SvrOrderProcess {
+    //委托确认
+    rpc OrderConfirm(OrderConfirmReq) returns (OrderConfirmResp) {}
+    //撤单废单-撤销撤单
+    rpc CancelWaste(CancelWasteReq) returns (CancelWasteResp) {}
+    //撤销、废单
+    rpc OrderCancel(OrderCancelReq) returns (OrderCancelResp) {}
+}
+  
+  
+  // OrderConfirm
+message OrderConfirmReq {
+  int32 l_order_id = 1;  //委托序号
+  string vc_confirm_no = 2;  // 委托确认号
+  int32 l_status = 3;  // 1 正报  2 已报
+  int32 l_channel_type = 4; // 1 实盘， 2 内盘
+  int32 l_channel_id = 5;
+}
+
+message OrderConfirmResp {
+  int32 errcode = 1;
+  string errmsg = 2;
+}
+
+//CancelWaste
+message CancelWasteReq {
+  int32 l_order_id  = 1;      //委托序号
+  string vc_waste_cause  = 2; //撤废原因
+  int32 l_channel_type = 3;   // 1 实盘， 2 内盘
+  string vc_confirm_no = 4;   //委托确认号
+  int32 l_channel_id = 5;
+}
+
+message CancelWasteResp {
+  int32  errcode = 1;
+  string errmsg = 2;
+}
+
+//OrderCancel
+message OrderCancelReq {
+  int32 l_order_id  = 1;      // 委托序号
+  string c_response_type = 2; // W-撤成、R-废单
+  string vc_waste_cause  = 3; // 撤/废单原因
+  int32 l_channel_type = 4;   // 1 实盘， 2 内盘, 3 融券服务
+  int32 l_cancel_amount = 5;  // 撤单数量
+  string vc_confirm_no = 6;   // 委托确认号
+  int32 l_channel_id = 7;
+}
+
+message OrderCancelResp {
+  int32  errcode = 1;
+  string errmsg = 2;
+}
+
+
+
+
+
+
+
+

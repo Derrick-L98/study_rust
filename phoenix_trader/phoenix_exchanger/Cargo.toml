@@ -1,0 +1,39 @@
+[package]
+name = "phoenix_exchanger"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+utility = { path = "../utility" }
+messagecenter = {path = "../messagecenter"}
+common = {path="../common"}
+
+config = "0.13"
+
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1", features = ["full"] }
+futures = "0.3"
+lapin = { version = "2", default-features = false, features = ["rustls"] }
+tonic = { version = "0.8", features = ["tls", "gzip"] }
+prost = "0.11"
+tokio-stream="0.1"
+rust_decimal = "^1"
+rust_decimal_macros = "^1"
+async-stream = "0.3"
+anyhow = "1.0"
+thiserror = "1.0"
+h2="0.3"
+log = "0.4"
+dashmap="5"
+
+sea-orm={version = "0.10", features = ["default","sqlx-mysql","runtime-tokio-rustls"]}
+
+async-channel="1.7"
+
+# parking_lot = "0.12"
+
+[build-dependencies]
+tonic-build = { version = "0.8", features = ["prost"] }

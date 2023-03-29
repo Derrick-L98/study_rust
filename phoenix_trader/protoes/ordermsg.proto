@@ -1,0 +1,91 @@
+syntax = "proto3";
+package phoenixordermsg;
+
+//===========================================================================
+//----------------------------------常量定义----------------------------------
+// 消息类型
+enum MsgType {
+    Register   = 0;    //注册报盘
+    Order      = 1;    //订单消息
+    Exec       = 2;    //订单执行回报
+    Response   = 999;  //请求响应
+}
+  
+// 订单类型
+enum OrderType {
+    Undef  = 0;  //未定义
+    Place  = 1;  //委托下单
+    Cancel = 2;  //撤销委托
+}
+  
+// 回报类型
+enum ExecType {
+    ExecUndef = 0;  //未定义
+    Confirm   = 1;  //确认回报
+    Filled    = 2;  //成交
+    Canceled  = 3;  //撤单回报
+    Rejected  = 4;  //下单拒绝
+}
+  
+//===========================================================================
+//+++++++++++++++++++++++++++++++++++消息包+++++++++++++++++++++++++++++++++++
+message RouterMsg {
+    MsgType    msg_type = 1;          // 消息类型:见MsgType
+    MsgContent msg_content      = 2;          // 与msg_type对应
+    int64      msg_id   = 3;          // 消息ID
+    int64      msg_time = 4;          // 消息创建时间
+}
+
+message MsgContent {
+    RegisterReq register_req    = 1; //注册
+    OrderMsg    order_msg       = 2; //下单消息
+    ExecMsg     exec_msg        = 3; //交易所回报
+    ReqResp     resp            = 4; //响应请求消息
+}
+
+message RegisterReq {
+    repeated int64  channel_id   = 1;
+}
+
+//+++++++++++++++++++++++++++++++++++消息体+++++++++++++++++++++++++++++++++++
+
+//----------------------------------下单请求----------------------------------
+message OrderMsg {
+    OrderType order_type       = 1;         // 订单类型:见OrderType
+    int64    order_id         = 2;         // 委托id
+    string    brk_order_id     = 3;         // 委托确认号
+    string    stock_code       = 4;         // 证券代码
+    int64    exchange_id    = 5;         // 市场id
+    int32    order_direction       = 6;         // 委托方向  1=buy  2=sell
+    int32     order_qty        = 7;         // 订单数量或撤单数量
+    int32     price_type       = 8;         // 价格类型(市价限价)
+    double    order_price      = 9;         // 委托价格
+    string    currency_no      = 10;        // 币种
+    int32     channel_type     = 11;        // 通道类型 1 外盘, 2 内盘
+    int64     channel_id       = 12;        // 通道id
+    int64     cancel_id        = 13;        // 撤单id
+}
+
+
+//----------------------------------交易所回报----------------------------------
+
+message ExecMsg {
+    ExecType exec_type     = 1;       // 回报类别: 见ExecType
+    int64   order_id      = 2;       // 委托序号
+    int32    exec_qty      = 3;       // 本次成交数量或撤单数量
+    double   exec_price    = 4;       // 本次成交价格
+    string   exec_id       = 5;       // 成交编号
+    string   exec_time     = 6;       // 发生时间  2019-12-19 11:21:19
+    int32   order_direction    = 7;       // 订单方向  1=Buy, 2=Sell
+    string   brk_order_id  = 8;       // 委托确认号
+    int64    channel_id    = 9;       // 通道id
+    int32    channel_type  = 10;      // 1 外盘, 2 内盘
+    string   memo     = 11;      // 备注
+}
+
+//----------------------------------请求响应----------------------------------
+message ReqResp {
+    int64  msg_id       = 1;          // 与请求消息ID对应
+    int32  error_code   = 2;
+    string error_msg    = 3;
+}

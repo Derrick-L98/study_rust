@@ -1,0 +1,12 @@
+[application]
+apphost = "0.0.0.0"
+# appport = 8409 # A股端口
+appport = 8415 # 港股端口
+[system]
+# exchangeno = "HS,XSHE,XSHG"
+# quotationserver = "http://uat-stock.chinaeast2.cloudapp.chinacloudapi.cn:50021"
+exchangeno = "HK,XHKG"
+quotationserver = "http://uat-stock.chinaeast2.cloudapp.chinacloudapi.cn:50039"
+cassinterval = 2
+channelcap = 20480
+filepath = "tickdb"

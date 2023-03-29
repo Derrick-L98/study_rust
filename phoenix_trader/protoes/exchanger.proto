@@ -1,0 +1,11 @@
+// phoenix交易所proto文件
+
+syntax = "proto3";
+package phoenixexchanger;
+
+import "ordermsg.proto";
+
+service PhoenixExchanger{
+  rpc PhoenixExchangerOrder(stream phoenixordermsg.RouterMsg) returns (stream phoenixordermsg.RouterMsg) {}    //委托下单请求
+//   rpc phoenix_cancel_order(PhoenixCancelOrderRequest)returns(PhoenixCancelOrderResponse) {}    //撤单请求
+}

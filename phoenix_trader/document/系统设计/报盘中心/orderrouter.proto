@@ -1,0 +1,9 @@
+syntax = "proto3";
+package orderrouter;
+
+import "ordermsg.proto";
+
+service OrderRouterService {
+    rpc OrderRouting(stream RouterMsg) returns (stream RouterMsg) {}   // 对接订单中心
+    rpc OrderTransfer(stream RouterMsg) returns (stream RouterMsg) {}  // 对接报盘
+}

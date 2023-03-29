@@ -1,0 +1,19 @@
+[workspace]
+members = [
+    "phoenix_assetscenter",
+    "phoenix_orderrouter",
+    "phoenix_riskcenter",
+    "phoenix_accountriskcenter",
+    "phoenix_akacenter",
+    "phoenix_settlecenter",
+    "phoenix_template",
+    "phoenix_ordercenter",
+    "phoenix_streamcenter",
+    "phoenix_hqcalccenter",
+    "phoenix_tickcenter",
+    "phoenix_exchanger",
+    "messagecenter",
+    "common",
+    "client",
+    "utility",
+]

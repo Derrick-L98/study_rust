@@ -1,0 +1,67 @@
+# 系统风控配置文件
+[database]
+uri = "mysql://companytest:ZNvC5NoLJNnO3Wn0@uat-stock-data.chinaeast2.cloudapp.chinacloudapi.cn:13301/finances_new"
+
+# uri = "mysql://companytest:ZNvC5NoLJNnO3Wn0@dev-data.chinaeast2.cloudapp.chinacloudapi.cn:13301/stock"
+[application]
+apphost = "0.0.0.0"
+# appport = 8765
+# appport = 10000
+appport = 10001
+
+[cassandra]
+# addr = ""
+username = "uatcass"
+password = "uatcass!2"
+addr = "uat-stock-data.chinaeast2.cloudapp.chinacloudapi.cn:11092"
+# namespace = "stockhqklinedata_kyc"
+# username = "uatcass"
+# password = "uatcass!2"
+# addr = "dev-data.chinaeast2.cloudapp.chinacloudapi.cn:11092"
+# namespace = "stockhqklinedata_hk"
+
+namespace = "test"
+[redis]
+redisaddrs = "uat-stock-data.chinaeast2.cloudapp.chinacloudapi.cn:6379"
+password = "pl9rz1L0hbOoacesE3Jh"
+redisdb = 3
+
+[rabbitmq]
+# amqpaddr = "amqp://pp:pp123@data.net:5672/%2f"
+amqpaddr = "amqp://pp:pp123@uat-stock-data.chinaeast2.cloudapp.chinacloudapi.cn:5672/%2f"
+# amqpaddr = ""
+exchanger_delay = "Stock"
+# exchanger = "StockLive"
+exchanger = "stock_new_test"
+
+# exchange_type = "topic"
+[system]
+# exchangeno = "HS,XSHE,XSHG"
+# quotationserver = "http://uat-stock.chinaeast2.cloudapp.chinacloudapi.cn:50021"#A股
+# quotationserver = "http://127.0.0.1:8765"
+logserver = "http://40.72.97.246:8420"
+exchangeno = "HK,XHKG"
+quotationserver = "http://uat-stock.chinaeast2.cloudapp.chinacloudapi.cn:50039"#港股
+
+# quotationserver = "http://uat-stock.chinaeast2.cloudapp.chinacloudapi.cn:50050"#美股
+cassinterval = 12
+# cacheinterval = 3
+channelcap = 204800
+filepath = "tickdb"
+# filepath = "Db"
+
+[quotaiontime.exchange]
+XSHG = ["09:30:00-11:30:00", "13:00:00-15:00:00"] #上交所
+XSHE = ["09:30:00-11:30:00", "13:00:00-15:00:00"] #深交所
+HS = ["09:30:00-11:30:00", "13:00:00-15:00:00"] #A股板块
+# XSHG = "09:30:00-11:30:00,13:00:00-15:00:00"        #A股指数
+# XSHE = "09:30:00-11:30:00,13:00:00-15:00:00"        #A股指数
+XHKG = ["09:30:00-12:00:00", "13:00:00-16:00:00"] #港交所
+HK = ["09:30:00-12:00:00", "13:00:00-16:00:00"] #港股板块
+# SE_HKI = "09:30:00-12:00:00,13:00:00-16:00:00"      #港股指数
+XASE = ["09:30:00-16:00:00"] #美交所
+XNYS = ["09:30:00-16:00:00"] #纽交所
+XNAS = ["09:30:00-16:00:00"] #纳斯达克
+US = ["09:30:00-16:00:00"] #美股板块
+# SE_USI = "09:30:00-16:00:00"                        #美股指数
+

@@ -1,0 +1,40 @@
+[application]
+apphost = "0.0.0.0"
+appport = 10001
+
+[cassandra_config]
+username = "uatcass"
+password = "uatcass!2"
+addr = "uat-stock-data.chinaeast2.cloudapp.chinacloudapi.cn:11092"
+namespace = "stockhqklinedata_kyc"
+
+[redis_is_cluster]
+flag = 1 #0(集群)  1(非集群)
+
+[redis_config]
+redisaddrs = "uat-stock-data.chinaeast2.cloudapp.chinacloudapi.cn:6379"
+password = "pl9rz1L0hbOoacesE3Jh"
+redisdb = 3
+
+[redis_cluster_config]
+password = "pl9rz1L0hbOoacesE3Jh"
+redisaddrs = [
+    # "172.16.1.221:7000",
+    # "172.16.1.221:7001",
+    # "172.16.1.221:7002",
+    # "172.16.1.221:7003",
+    "52.131.255.193:7000",
+    "52.131.255.193:7001",
+    "52.131.255.193:7002",
+    "52.131.255.193:7003",
+]
+
+[common]
+market = "HS"
+delay = 0
+time_diff = 0
+winter_time = 0
+exchange_no = "XSHE"
+
+
+

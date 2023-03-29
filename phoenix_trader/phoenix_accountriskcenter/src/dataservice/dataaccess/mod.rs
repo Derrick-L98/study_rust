@@ -1,0 +1,9 @@
+pub mod phoenix_account_assets;
+pub mod phoenix_account_assets_his;
+pub mod phoenix_account_reset_detail;
+pub mod phoenix_deal_detail;
+pub mod phoenix_risk_details;
+pub mod phoenix_stockposition_channel;
+pub mod phoenix_stockposition_channel_his;
+pub mod phoenix_sys_system;
+pub mod phoenix_trans_detail;

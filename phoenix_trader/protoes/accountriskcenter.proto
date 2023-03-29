@@ -1,0 +1,188 @@
+// 账户风控proto文件
+syntax = "proto3";
+
+package phoenixaccountriskcenter;
+
+
+service AccountRiskCenter{
+
+  // 查找股票在某个通道的持仓信息.
+  rpc query_stock_positions(PhoenixStockPositionRequest) returns (PhoenixStockPositionResponse) {}
+  //查找运营账号的资产信息
+  rpc query_account_assets(PhoenixAccountQueryRequest) returns (PhoenixAssetsResponse){}
+  //资金划转
+  rpc transfer_fund(PhoenixTransferRequest) returns (PhoenixAssetsResponse){}
+  //分帐户reset动作
+  rpc reset_profit(PhoenixAccountResetRequest) returns (PhoenixAssetsResponse) {}
+
+  //**********************************************账户风控**********************************************
+  rpc query_margin_ratio(MarginRatioReq)returns(MarginRatioResp) {}                // 保证金比例查询
+  rpc query_user_toal_assets(UserAssetsReq)returns(UserTotalAssetsResp) {}                      // 用户总资产查询,包括持仓
+  rpc query_user_assets(UserAssetsReq)returns(UserAssetsResp) {}//仅仅查找用户资产信息
+  rpc query_user_positions(UserPositionReq)returns(UserPositionResp) {}    // 用户持仓查询
+}
+
+message  PhoenixStockPositionRequest{
+	int64 stock_id =1;//stock id
+	int64 channel_id =2;//channel id 需要支持0查出所有
+}
+
+message PhoenixStockPositionResponse{
+	string ret_code =1;//返回结果
+	string ret_msg =2;//返回结果
+	repeated PhoenixStockPositions data = 3;//position data
+  int64 user_total_positions =4;//该券的所有用户持仓
+}
+
+message PhoenixStockPositions{
+  int64 stock_id = 1;//stock id
+	int64 channel_id =2;//channel id
+	int64 current_amount =3;//current amount
+  int64 prebuy_amount = 4;//prebuy amount
+  int64 frozen_amount = 5;//
+  int64 frozen_amount_temp = 6;
+	double total_value =7;//total value
+	double total_value_hkd =8;//total value hkd
+	int32 stock_type =9;//stock type
+   int32  is_qfii = 10;       // 是否QFII通道
+}
+
+// //分帐户资产信息请求
+message PhoenixAccountQueryRequest{
+  int64 account_id = 1; //0表示全部
+}
+
+message PhoenixAccountResetRequest{
+  int64 account_id = 1;
+  int64 operator_id = 2;
+}
+
+//资金划转的请求
+message PhoenixTransferRequest{
+  int64 target_account = 1;
+  int32 transfer_type = 2;//调整类型，既增加:2,减少:1
+  double transfer_value = 3;//金额
+  int32 capital_type = 4; //1: 资金类型
+  int64 operator_id = 5; //操作人员
+  int64 source_account = 6;//对应的源账户
+  string memo = 7;//说明
+}
+
+message  PhoenixAssetsResponse{
+	string ret_code =1;//返回结果
+	string ret_msg =2;//返回结果
+	repeated PhoenixAccountAssetsInfo data = 3;
+}
+
+message PhoenixAccountAssetsInfo{
+    int64 id = 1;//i64,
+    int64 p_account_id = 2;//i64,                       
+    double p_current_principal = 3;//本金:初始值+资金划拨得值+实际盈亏;   总账户:融资本金'
+//    double p_credit_cash = 4;//信用金  所有账户：(本金*刚杠),仅对总账户有效，主账户和分帐户可以不处理
+    double p_current_financial = 5;//当前本金，总账户:当前本金,   分帐户:0,
+    double p_financing_borrowed = 6;//已借金额 分帐户：持仓表中所有品种的 ∑(total_value*(1-（保证金比率（1/4)))) * 参考汇率，总账户：持仓市值-当前本金，如数值小于等于0，可显示为空
+    double p_position_value = 7;//持仓市值，包含科创版和创业板, 全部帐户： 分帐户持仓表中∑(current_amount*avg_price)*参考汇率
+    double p_position_value_star = 8;//(科创版+创业板）持仓市值，单独计算，全部账户计算方式一样
+    double p_floating_profit = 9;//浮动盈亏，∑((最新价-持仓均价)*数量)
+    double p_star_rate = 10;//创业板比率 = [（所属通道持仓市值（创）汇总 + 所属通道对应创业板开仓挂单金额汇总）/ 当前本金 *（杠杆 + 1）] * 100%
+    double p_risk_value = 11;// //风险率  [已借金额/（持仓市值*0.75）]*100%，
+    double p_financing_occupied = 12;//持仓维持保证金 ∑(品种1对应通道的持仓市值*[品种1在该通道的保证金比例]+...品种N对应通道持仓市值*[品种N在该通道的保证金比例])
+    double p_financing_occupied_star = 13;//创业板持仓维持保证金
+    double p_prebuy_margin = 14;//开仓委托维持保证金
+    double p_prebuy_margin_star = 15;//科创板开仓委托维持保证金
+    double p_rich_security = 16;//运营子账户运营本金 + 浮动盈亏 - 保证金占用
+    int32 p_account_type = 17;//账号类型，比如：0：分帐户, 1：主账户，2:总账户，
+    int32 p_lastdate = 18;//上一个交易日
+    int64 p_updatetime = 19;//更新时间，时间戳
+    double p_real_profit = 20;//实际盈亏
+    double p_fee_total_hkd = 21;//总费用（交易账户产生的)
+}
+
+
+//**********************************************账户风控**********************************************
+message MarginRatioReq{
+  int64 unit_id = 1;
+  int64 stock_id = 2; // *保证金比例与通道无关
+}
+
+message  MarginRatioResp{
+ string ret_code =1;
+ string ret_msg =2;
+ int64 unit_id = 3;
+ int64 stock_id = 4;
+ double margin_ratio = 5;    // 保证金比例
+}
+
+message UserAssetsReq{
+ repeated int64 unit_id = 1;
+}
+
+message UserAssetsResp{
+  string ret_code = 1;
+  string ret_msg = 2; 
+  repeated PhoenixUserAssets assets = 3;
+}
+
+message UserPositionReq{
+ int64 unit_id = 1;   // 用户id, 必传
+ int64 stock_id = 2;  // 0 返回全部
+}
+
+message  UserPositionResp{
+  string ret_code = 1;
+  string ret_msg = 2; 
+  repeated PhoenixUserPositions positions = 3;
+}
+
+message UserTotalAssetsResp{
+  string ret_code = 1;
+  string ret_msg = 2; 
+  PhoenixUserAssets assets = 3;//资产数据
+  repeated PhoenixUserPositions positions = 4;//持仓数据
+}
+
+message  PhoenixUserAssets{
+  string ret_code = 1;                  // 返回结果
+  string ret_msg = 2;                   // 返回结果
+  int64  unit_id = 3;
+  double total_asset = 4;               // 当前本金（包括持仓盈亏的）
+  double total_position_value = 5;      // 总持仓市值
+  double gem_position_value = 6;        // 创业板市值
+  double real_margin = 7;               // 当前保证金占用
+  double real_cash = 8;                 // 数据库本金
+  double risk_rate = 9;                 // 风险率
+  int32  trade_state = 10;              // 账户交易状态
+  double warning_line = 11;             // 预警线
+  double available_cash=12;             // 可用本金/可取本金
+  double net_income=13;                 // 净入金
+  double hold_yk=14;                    // 持仓盈亏
+  double today_yk=15;                   // 今日盈亏
+  double total_yk=16;                   // 总盈亏
+  double draw_frozen=17;                // 提现冻结
+  double trade_frozen_capital=18;       // 交易临时冻即挂单保证金占用
+  double gem_trade_frozen_capital=19;   // 创业板挂单临时冻结保证金占用
+  double level_num=20;                  //杠杠倍数
+  double lastday_cash=21;               // 昨日当前本金
+  double today_deposit=22;              //今日入金
+  double today_withdrawal=23;           //今日出金
+  double frozencash=24;                 //提现冻结
+  double gem_margin_frozen_capital=25;  //创业板保证金占用
+  double close_line=26;                 //平仓线
+  double total_deposit=27;              //总入金
+  double total_withdrawal=28;           //总出金
+}
+
+message PhoenixUserPositions {
+ int64  unit_id = 1;           // 用户
+ int64  stock_id = 2;     
+ string stock_code = 3;
+ int64  exchange_id = 4;
+ int64  amount = 5;           // 总持仓量(含QFII数量)
+ int64  frozen_amount = 6;    // 冻结（含临时冻结）
+ int64  prebuy_amount = 7;    // 预买数量
+ int64  qfii_amount = 8;      // QFII持仓量  是
+ double margin_ratio = 9;     // 保证金比例
+ double total_value_hkd = 10; // 开仓总成本
+ double last_price = 11;      // 最新价
+ int32 stock_type = 12;       // 股票类别
+}

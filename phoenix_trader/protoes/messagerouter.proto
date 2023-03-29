@@ -1,0 +1,10 @@
+syntax = "proto3";
+package phoenixmessagerouter;
+
+import "ordercenter.proto";
+import "ordermsg.proto";
+
+service MessageRouterService {
+  rpc OrderMessageTransfer(phoenixordercenter.OrderReq) returns (phoenixordercenter.OrderReq) {}
+  rpc ExecOrderMessageTransfer(phoenixordermsg.RouterMsg) returns (phoenixordermsg.RouterMsg) {}
+}

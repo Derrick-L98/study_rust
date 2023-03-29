@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package marketdata;
+
+import "hqmsg.proto";
+
+service MarketDataServers {
+	rpc SubscribeMarketData(stream ContractMsg) returns (stream hqmsg.YsHqInfo) {}
+	rpc QueryCommodityData(CommodityMsg) returns (stream QryContractMsg) {}
+}
+
+message ContractMsg {
+	string	ExchangeNo	= 1;	//交易所
+	string	CommodityNo	= 2;	//商品
+	string	ContractNo	= 3;	//合约
+	int32	ChannelNo	= 4;	//通道
+	bool	Subscribe	= 5;	//true:订阅 false:取消订阅
+}
+
+//查询品种
+message CommodityMsg {
+	string ExchangeNo	= 1;	//交易所
+	string CommodityNo	= 2;	//商品
+}
+//返回查询品种信息
+message QryContractMsg {
+	string	ExchangeNo	= 1;	//交易所
+	string	CommodityNo	= 2;	//商品
+	string	ContractNo	= 3;	//合约
+}

@@ -1,0 +1,9 @@
+syntax = "proto3";
+package phoenixorderrouter;
+
+import "ordermsg.proto";
+
+service OrderRouterService {
+    rpc OrderRouting(stream phoenixordermsg.RouterMsg) returns (stream phoenixordermsg.RouterMsg) {}   // 对接订单中心
+    rpc OrderTransfer(stream phoenixordermsg.RouterMsg) returns (stream phoenixordermsg.RouterMsg) {}  // 对接报盘
+}

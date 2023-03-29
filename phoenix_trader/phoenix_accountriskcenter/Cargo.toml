@@ -1,0 +1,58 @@
+[package]
+name = "phoenix_accountriskcenter"
+version = "0.1.0"
+edition = "2021"
+description = "账户风控系统"
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+common = { path = "../common" } 
+utility = {path ="../utility"}
+messagecenter={path="../messagecenter"}
+
+tonic = "0.8.2"
+prost = "0.11.2"
+
+async-global-executor = "2"
+
+futures-core = "0.3" 
+futures-util = "0.3"
+tokio = { version = "1", features = ["full"] }
+tokio-stream = "0.1"
+futures = { version = "0.3", default-features = false, features = ["alloc"] }
+async-stream = "0.3"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+rust_decimal = "1"
+
+log="0.4.17"
+log4rs = "1.0"
+sea-orm = { version = "0.10", features = [ "sqlx-mysql", "runtime-tokio-rustls", "macros" ] }
+
+rand = "0.8.5"
+
+anyhow = "^1.0"
+lazy_static = "1.4.0"
+config = "0.13"
+
+# bson (required)
+rbson = "2.0"
+chrono = "0.4"
+#tokio-rs web framework
+axum = "0.6"
+axum-extra = "0.4"
+tower = { version = "0.4", features = ["util", "filter"] }
+hyper = { version = "1.0.0-rc.1", features = ["full"] }
+tower-http = { version = "0.3", features = ["trace"] }
+
+reqwest = { version = "0.11", default-features = false, features = [
+    "rustls-tls",
+    "json",
+] }
+
+moka = { version = "0.9.6", features = ["future"] }
+
+dashmap = "5"
+
+[build-dependencies]
+tonic-build = { version = "0.8", features = ["prost"] } 

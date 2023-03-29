@@ -1,0 +1,43 @@
+// phoenix交易所proto文件
+
+syntax = "proto3";
+
+package phoenixriskcenter;
+
+service PhoenixRiskcenter{
+  rpc phoenix_risk_check(PhoenixRiskCheckRequest)returns(PhoenixRiskCheckResponse) {}    //请求获取通道
+  rpc phoenix_risk_test(PhoenixRiskRequest)returns(PhoenixRiskResponse) {}    //风控测试
+}
+
+message PhoenixRiskCheckRequest{
+	 PhoenixRiskCheckInfo queryinfo = 1;
+}
+
+message PhoenixRiskCheckInfo{
+	int64 	unit_id = 1;//用户unit_id, 
+	int64 	stock_id 		= 2;//股票ID, 
+	double 	order_price 	= 3;//价格, 
+	int32 	order_amount 	= 4;//数量，
+	int32 	order_direction = 5;//方向（ 1:买 2：卖）
+	int32	channel_type = 6;//通道类型：1：外盘 2：内盘
+	int32 	order_type     = 7;//委托类型 1:app下单  2:跟单  3:风控止盈止损平仓单,4:风控总资产预警平仓单 5:pc客户端单 6:结算平仓单 7:管理端强平仓单,8:app清仓,9:pc清仓,10,管理员平仓,11,合约到期日强平
+	int64 	order_channel  = 8;//通道
+	int64	market_id      = 9;//市场ID
+    int32   trade_mode     = 10;        // 1:USER(用户直连) 2:AGENT(代理托管)
+    int64   agent_account  = 11;        // 代理账户
+}
+
+message  PhoenixRiskCheckResponse{
+	string ret_code =1;//返回结果
+	string ret_msg =2;//返回结果
+	repeated PhoenixRiskCheckInfo retinfo = 3;
+}
+
+message PhoenixRiskRequest{
+	 PhoenixRiskCheckInfo queryinfo = 1;
+}
+
+message  PhoenixRiskResponse{
+	int32 ret_code =1;//返回结果
+	string ret_msg = 2;//返回信息
+}

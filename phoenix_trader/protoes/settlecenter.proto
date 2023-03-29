@@ -1,0 +1,91 @@
+// phoenix结算中心proto文件
+
+syntax = "proto3";
+
+package phoenixsettlecenter;
+
+// 清算步骤
+enum LiqStep {
+    None = 0;
+    Archive = 1;      // 归档
+    SwitchDate = 2;   // 切换日期
+    Settle = 3;       // 交收
+    DvdRegister = 4;  // 权益分派-登记
+    DvdSettle = 5;    // 权益分派-到账
+}
+
+// 清算状态
+enum LiqState {
+    UnExec = 0;  // 未执行
+    Done = 1;    // 执行完成
+    Failed = 2;  // 执行出错
+}
+
+service SettlecenterService{
+    rpc QueryLiquidateDetail(LiquidateDetailReq) returns (LiquidateDetailResp) {}   // 查询清算明细
+    rpc DoLiquidate(LiquidateReq) returns (LiquidateResp) {}                        // 结算请求
+    rpc DividendInfo(DividendInfoReq) returns (DividendInfoResp) {}		            // 权益分派信息录入
+}
+
+//----------------------------------查询清算明细----------------------------------
+message LiquidateDetailReq {
+    int32 market_id = 1; // 市场, 为0时查询全部市场
+}
+
+message LiquidateDetailResp {
+    repeated  LiquidateDetail details = 1;
+    int32  error_code   = 2;
+    string error_msg    = 3;
+}
+
+message LiquidateDetail {
+    int32 market_id = 1;      // 市场
+    int32 sys_date = 2;       // 交易系统日期
+    LiqStep current_step = 3; // 一般流程 ->1->2->3->
+    LiqState state = 4;       // 当前步骤的执行状态
+    string liq_memo = 5;      // 当前步骤的详细说明
+    int64 exec_time = 6;      // 执行时间
+}
+
+//----------------------------------结算请求----------------------------------
+message LiquidateReq {
+    int64  msg_id = 1;          // 消息ID
+    int32 market_id = 2;
+    LiqStep liqstep = 3;
+}
+
+//  
+message LiquidateResp {
+    int64  msg_id       = 1;   // 与请求消息ID对应
+    int32  error_code   = 2;
+    string error_msg    = 3;
+}
+
+//----------------------------------分红送股登记----------------------------------
+message DividendInfoReq {
+  int64   msg_id          = 1;        // 消息ID
+  int32   exchange_id     = 2;        // 市场id
+  string  stock_code      = 3;        // 证券代码
+  string  dividend_flag   = 4;        // 权益类型  431:红利  432:红股 
+  int32   ex_date         = 5;        // 除权日
+  int32   settle_date     = 6;        // 发放日
+  double  dividend_price  = 7;        // 除权价格
+  double  stock_rate      = 8;        // 每股分配
+  double  tax_rate        = 9;        // 每股税率
+  int32   lastupdate_date = 11;       // 最后更新日期
+  int32   record_date     = 12;       // 登记日
+  int32   operator_no     = 13;       // 操作员
+  string  status          = 14;       // 状态  填1:已经配对
+  string  currency_no     = 15;       // 币种
+  int32   operate_flag    = 16;       // 操作标记 0:新增 1:修改
+  int64   dividend_no     = 17;       // 权益分派记录号
+  string  remarks         = 18;       // 备注
+}
+
+// 回复的数据包
+message DividendInfoResp{
+    int64  msg_id       = 1;   // 与请求消息ID对应
+    int32  error_code   = 2;
+    string error_msg    = 3;
+    int64  devidend_no  = 4;						
+}

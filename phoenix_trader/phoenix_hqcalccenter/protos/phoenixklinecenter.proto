@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package phoenixklinecenter;
+
+service PhoenixKlineCenter {
+    // rpc post_current_kline_hq(KLineHqReq) returns(KLineHqResp){};		//当前K线
+    // rpc post_current_fenshi_hq (KLineHqReq) returns(KLineHqResp){};		//当前分时
+
+	rpc get_last_kline_data(KLineHqRequest) returns(KLineDataResp){};			//未生成的K线数据
+	rpc get_generate_fenshi_hq(KLineHqRequest) returns(FenShiResp){};		//生成的分时数据
+}
+
+//备注:历史K线请求必传：合约编号,结束时间, 条数。当前K线请求：传条数 ,合约 
+//历史分时请求：只传合约编号拼接日期 合约编号值为：合约|日期。 当前分时请求:合约+日期   例如:CL1810|20180910 
+message KLineHqRequest {
+	string  contract_no = 1;		//合约编号
+	string	kline_type = 2;		//1:一分钟 5:5分钟, 10:10分钟,30: 30分钟, 60：60分钟,24:日线
+}
+
+message FenShiResp {
+	string fenshi_hq = 1; 
+}
+
+message KLineDataResp {
+	string stock_code = 1;           //股票代码
+    string tick_time = 2;            //最新一条tick的时间, 来一条tick就更新此值, 和prev_minutes对应
+    double open_price = 3;              //开
+    double close_price = 4;             //收
+    double high_price = 5;              //高
+    double low_price = 6;               //低
+    double last_price = 7;              //新
+    double average_price = 8;          //均价
+    double pre_close_price = 9;         //昨收价
+    double current_period_volume = 10;   //本周期最新总成交量
+    double current_period_turnover = 11; //本周期最新总成交额
+    int32 period = 12;                  //周期
+    int32 prev_minutes = 13;            //记录K线上一个周期在当天分钟数, 即最新的已形成的周期=====> 用来更新K线
+}

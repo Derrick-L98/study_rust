@@ -1,0 +1,332 @@
+//模拟基础数据proto文件
+syntax = "proto3";
+package phoenixakacenter;
+
+enum Currency {
+  UNDEF = 0;
+  HKD = 1;
+  CNY = 2;
+  USD = 3;
+}
+
+service PhoenixAkaCenter {
+  rpc query_channel_hold_limit(ChannelHoldLimitReq) returns (ChannelHoldLimitResp) {}   // 股票通道最大持仓量等信息(需本地缓存，消息通知更新)
+  rpc query_channel_info(ChannelInfoReq) returns (ChannelInfoResp) {}                   // 通道基础信息(需本地缓存，消息通知更新)
+  rpc query_stock_channel(StockChannelReq) returns (StockChannelResp) {}                // 股票通道配置优先级信息
+  rpc query_stock_info(StockInfoReq) returns (StockInfoResp) {}                         // 股票基础信息以及交易时间段
+  rpc query_special_account(SpecialAccountInfoReq) returns (SpecialAccountInfoResp) {}  // 全部交易对手方账号和特殊账号信息
+  rpc query_market_info(MarketInfoReq) returns (MarketInfoResp) {}                      // 市场信息以及交易日信息
+  rpc query_market_close_info(MarketCloseInfoReq) returns (MarketCloseInfoResp) {}      // 临时休市信息
+  rpc query_exchange_rate(ExchangeRateReq) returns (ExchangeRateResp) {}                // 汇率查询(基准币为港币)
+  rpc query_account_info(AccountInfoReq) returns (AccountInfoResp) {}                   // 账户信息查询
+  rpc query_trade_date(TradeDateReq) returns (TradeDateResp) {}                         // 交易日信息查询
+  rpc query_unit_stock_margin(UserStockMarginReq) returns (UserStockMarginResp){}       // 查询用户品种的保证金
+  rpc query_fee_setting(FeeSettingReq) returns (FeeSettingResp){}                       // 查询费用设置
+  rpc query_stock_channel_margin(StockMarginReq) returns (StockMarginResp){}            // 查询股票通道保证金比例
+  rpc query_stock_suspension_info(StockSuspensionReq) returns (StockSuspensionResp){}   // 查询停牌股票信息
+  rpc query_stock_trade_time(StockTradeTimeReq) returns (StockTradeTimeResp){}          // 股票交易时间查询
+}
+
+
+//-----------------------------------------股票通道最大持仓量等信息-----------------------------------------
+message ChannelHoldLimitReq {
+  int64 stock_id = 1;
+  int64 channel_id = 2; //默认为0查出所有
+}
+message ChannelHoldLimitResp {
+  int32 ret_code = 1;//返回结果
+  string ret_msg = 2;//返回结果
+  repeated ChannelHoldLimit data = 3;
+  int64 total_max_hold = 4;// 整体最大持仓量
+}
+
+message ChannelHoldLimit {
+  int64 channel_id = 1;   //通道编号,
+  int64 stock_id = 2;     // 证券id,
+  int64 max_holdnum = 3;  // 通道最大持仓量,
+  int64 max_holdvalue = 4;//最大持仓市值,
+}
+
+//-----------------------------------------------通道基础信息-----------------------------------------------
+message ChannelInfoReq {
+  int64 channel_id = 1; //默认为0查出所有
+}
+
+message ChannelInfoResp {
+  int32 ret_code = 1;//返回结果
+  string ret_msg = 2;//返回结果
+  repeated ChannelInfo data = 3;
+}
+
+message ChannelInfo {
+  int64 channel_id = 1;
+  string channel_name = 2;
+  int32 channel_state = 3;
+  int32 channel_type = 4;//通道类型 1：外盘通道 2：内盘通道
+  int64 account_id = 5;//分账号id
+  int32 qfii_state = 6; //是否支持qfii，用于判断交易时间
+}
+
+//-------------------------------------------股票通道配置优先级信息-----------------------------------------
+message StockChannelReq {
+  int64 unit_id = 1; 
+  int64 stock_id = 2; //股票id
+  int32  order_direction = 3;//交易方向 1：买 2：卖
+}
+message StockChannelResp {
+  int32 ret_code = 1;//返回结果
+  string ret_msg = 2;//返回结果
+  repeated ChannelConfig data = 3;
+}
+
+message ChannelConfig {
+  int64 id = 1;
+  int64 channel_id = 2;      //通道ID
+  string channel_name = 3;   //通道名称
+  int64 unit_id = 4;         //用户iD，0表示全部用户
+  int32 channel_level = 5;   //level 通道优先级
+  int32 channel_type = 6 ;   //通道类型 1：内盘 2：外盘
+  int32 channel_status = 7;  //通道状态 -1:关闭 1：正常，2：只买，3：只卖，4：禁止交易
+  int64 commodity_group = 8; //品种组 
+  int32 qfii_state = 9;      //qf state 0: no, 1:yes
+}
+
+//-------------------------------------------股票基础信息以及交易时间段--------------------------------------
+message StockInfoReq {
+  int64 stock_id = 1; //股票id //默认为0查出所有
+  int64 exchange_id = 2; // 市场id
+  string stock_code = 3; // 证券代码
+
+}
+message StockInfoResp {
+  int32 ret_code = 1;//返回结果
+  string ret_msg = 2;//返回结果
+  repeated StockInfo data = 3;
+}    
+message StockInfo {
+  int64   stock_id = 1;   // 股票id,
+  string  stock_code = 2; // 股票代码
+  string  stock_name = 3; // 股票名称,
+  int32   trade_state = 4; //  1:正常，2：只能平仓，3：禁止交易,
+  string  hands_num = 5;   // 证券-每手股数,
+  int32   stock_type = 6;   // 股票类型  1:普通A股(ESA.M)-不含创业板、科创板,、新三板、中小板,2.港股， 3.美股, 4.创业板（ESA.GEM)5.科创板（KSH)
+  int32   min_value = 7;    // 单笔最小数量
+  int32   max_value = 8;    // 单笔最大数量
+  double  max_single_money = 9;  // 单笔最大金额
+  int64   market_id = 10;        //市场id
+  string  market_code =11;       //市场code
+  Currency  trade_currency = 12; //交易币种
+  double margin_rate=13;//品种保证金比例
+}
+
+//---------------------------------------全部交易对手方账号和特殊账号信息---------------------------------------
+enum SpecialAccountType {
+  ALL = 0; 
+  Counterparty = 1;
+}
+message SpecialAccountInfoReq {
+  SpecialAccountType account_type = 1;
+}
+message SpecialAccountInfoResp {
+  int32 ret_code = 1;   //返回结果
+  string ret_msg = 2;    //返回结果
+  repeated SpecialAccount accounts = 3;
+}
+
+message SpecialAccount {
+  SpecialAccountType account_type = 1;
+  int64 unid_id = 2;
+}
+
+//------------------------------------------市场信息以及交易日信息-------------------------------------------
+message MarketInfoReq {
+  int64 market_id = 1; //市场id 默认0为查出所有
+}
+message MarketInfoResp {
+  int32 ret_code = 1;//返回结果
+  string ret_msg = 2;//返回结果
+  repeated MarketInfo data = 3;
+}
+
+message MarketInfo {
+  int64  market_id = 1;    //市场id
+  Currency currency_type = 2;//币种
+  string market_code = 3;  //市场code
+  int64  market_type = 4;  //市场类型
+  int64  current_date = 5;  //当前日期
+  int32  date_type = 6;     // 0 非交易日  1 交易日 2 半日市
+}
+//-----------------------------------------------临时休市信息-----------------------------------------------
+message MarketCloseInfoReq {}
+
+message MarketCloseInfoResp {
+    int32 ret_code = 1;   //返回结果
+    string ret_msg = 2;    //返回结果
+    repeated MarketCloseInfo data = 3;
+}
+message MarketCloseInfo {
+  int64  market_id = 1;
+  string start_time = 2; //休市开始时间
+  string end_time = 3;   //休市结束时间
+  int32  close_type = 4; //休市类型
+}
+
+//-----------------------------------------------汇率查询-----------------------------------------------
+message ExchangeRateReq {
+  Currency currency = 1;  // 交易币种
+}
+
+message ExchangeRateResp {
+  int32 ret_code = 1;
+  string ret_msg = 2;
+  ExchangeRate data = 3;
+}
+
+
+message ExchangeRate {
+  Currency currency = 1;     // 交易币种
+  Currency base_currency = 2;// 基准币 默认为HKD
+  double   buy_rate = 3;     // 买入交易币
+  double   sell_rate = 4;    // 卖出交易币
+  int64    modify_time = 5;  //汇率维护时间
+}
+
+//-----------------------------------------------账户信息查询-----------------------------------------------
+message AccountInfoReq {
+  int64 unit_id = 1; // 为0时查询全部交易账户
+}
+
+message AccountInfoResp {
+  int32 ret_code = 1;
+  string ret_msg = 2;
+  repeated AccountInfo data = 3;
+
+}
+
+message AccountInfo {
+  int64     unit_id            = 1;   // 用户ID(目前系统等同于user_id)
+  int32     trade_mode         = 2;   // 接入方式 1:USER(用户直连) 2:AGENT(代理托管)
+  int64     agent_account      = 3;   // 代理账户(接入方式为2:AGENT时不能为空, 非开户代理, 原merchant)
+  string    level_rate         = 4;   // 融资杠杆比例
+  int64     expire_date        = 5;   // 到期日期
+  double    warning_line       = 6;   // 预警线
+  double    close_line         = 7;   // 平仓线
+  int64     trade_state        = 8;   // 交易账号状态 1.正常交易  2.禁止开仓 3.禁止交易 4.账号冻结
+  double    gem_limit          = 9;   // 创业板限制
+}
+
+
+//------------------------------------------交易日查询-------------------------------------------
+message TradeDateReq {
+  int64 market_id = 1;  //市场id 默认0为查出所有
+  int32 query_date = 2; // 0 表示当前系统日期, 非0表示查指定日期
+  int32 query_type = 3; // 0 日期查询  1 交易日查询  2交收日查询
+  int32 date_offset = 4;// 0 当天  1 下一日/交易日/交收日/ 2  下下一日/交易日/交收日 3.....5 最大不超过5
+}
+
+message TradeDateResp {
+  int32 ret_code = 1;//返回结果
+  string ret_msg = 2;//返回结果
+  repeated TradeDateInfo data = 3;
+}
+
+message TradeDateInfo {
+  int64  market_id = 1;     //市场id
+  int32  current_date = 2;  //当前系统日期
+  int32  target_date = 3;   //根据查询条件获取到的日期
+  int32  date_type = 4;    //交易日, 半日市 非交易市
+}
+
+message UserStockMarginReq{
+  int64 unit_id=1;//用户ID
+  int64 stock_id=2;//品种id
+}
+
+
+message UserStockMarginResp{
+   int32 ret_code = 1;
+   string ret_msg = 2;
+   double margin_rate=3;//用户品种保证金
+}
+
+
+message FeeSettingReq {
+  string fee_type = 1;         // 费用类型 非空时必须匹配, 为空则查询全部
+  int64  exchange_id = 2;      // 市场id   请求时必传,查询询时 没有的话取通用
+  int32  order_direction = 3;  // 委托方向 请求时必传,查询询时 没有的话取通用
+  int64  unit_id = 4;          // 用户id   请求时必传,查询询时 没有的话取通用
+  int64  channel_id = 5;       // 通道id   请求时必传,查询询时 没有的话取通用
+  int32  stock_type = 6;       // 证券类别 请求时必传,查询询时 没有的话取通用
+}
+
+message FeeSettingResp {
+  int32 ret_code = 1;
+  string ret_msg = 2;
+  repeated FeeSetting  fee_settings = 3;         // 费用类型
+}
+
+message FeeSetting {
+  string fee_type = 1;          // 费用类型
+  int64  exchange_id = 2;       // 市场id
+  int32  order_direction = 3;   // 委托方向
+  int64  unit_id = 4;           // 用户id
+  int64  channel_id = 5;        // 通道id
+  int32  stock_type = 6;        // 证券类别
+  double fee_ratio = 7;         // 成交金额比例
+  double maximum_fee = 8;       // 最高费用
+  double minimum_fee = 9;       // 最低费用
+  Currency currency_type = 10;  // 最高/低收费币种类型: CNY/HKD/USD
+  int32  decimal_type = 11;     // 小数位处理方式 1:四舍五入  2: 全舍  3: 全入
+}
+
+message StockMarginReq {
+  int64 stock_id = 1;
+  int64 channel_id = 2;
+}
+
+message StockMarginResp {
+  int32 ret_code = 1;
+  string ret_msg = 2;
+  StockMargin  stock_margin = 3;         // 费用类型
+
+}
+message StockMargin {
+  int64 stock_id = 1;
+  int64 channel_id = 2;
+  double margin_rate = 3;
+}
+
+
+
+message StockSuspensionReq {}
+
+message StockSuspensionResp {
+  int32 ret_code = 1;
+  string ret_msg = 2;
+  repeated StockSuspension stock_suspension = 3;         
+
+}
+
+message StockSuspension {
+  int64 stock_id = 1;                    // 证券id
+  int32 susp_date = 2;                   // 停牌日期
+  int32 process_date = 3;                // 处理日期
+  double margin_rate_increment = 4;      // 保证金增量
+}
+
+
+message StockTradeTimeReq {
+  int64 stock_id = 1;    // 股票id stock_id不为0时, 按stock_id查
+  int64 exchange_id = 2; // 市场id  stock_id为0时, 按exchange_id查
+}
+
+message StockTradeTimeResp{
+  int32 ret_code = 1;
+  string ret_msg = 2;
+  repeated StockTradeTime tradetimes = 3;
+}
+
+message StockTradeTime{
+  string times=1;   // 时间格式为 09:00:00|11:30:00,13:00:00|15:00:00
+  int32  op_type=2;  // 1:开仓，2：平仓
+}

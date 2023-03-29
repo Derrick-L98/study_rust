@@ -1,0 +1,52 @@
+[application]
+ip = "127.0.0.1"
+port = 9090
+machineid = 1 
+nodeid = 9090
+
+[mysql]
+uri = "mysql://companytest:ZNvC5NoLJNnO3Wn0@uat-stock-data.chinaeast2.cloudapp.chinacloudapi.cn:13301/phoenix_stock"
+
+[redis]
+uri = "redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7000/,redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7001/,redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7002/,redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7003/,redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7004/,redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7005/" 
+
+[system]
+cachelong = 60
+oppaccount=201215
+
+[mq]
+# amqpaddr = "amqp://pp:pp123@data.net:5672/%2f"
+amqpaddr = "amqp://pp:pp123@uat-stock-data.chinaeast2.cloudapp.chinacloudapi.cn:5672/%2f"
+exchanger = "stock_new_test"
+queue = "phoenix_ordercenter"
+routingkey = "msg.order.*,msg.exec.*"
+
+[grpcserver]
+riskcenter = "http://uat-stock.chinaeast2.cloudapp.chinacloudapi.cn:60000"
+# orderrouterclient = "http://172.16.1.9:8887"
+orderrouter = "http://uat-stock.chinaeast2.cloudapp.chinacloudapi.cn:9090"
+assetscenter = "http://uat-stock.chinaeast2.cloudapp.chinacloudapi.cn:9090"
+akacenter = "http://uat-stock.chinaeast2.cloudapp.chinacloudapi.cn:9090"
+logserver = "http://uat-stock.chinaeast2.cloudapp.chinacloudapi.cn:9090"
+accountriskcenter="http://uat-stock.chinaeast2.cloudapp.chinacloudapi.cn:9090"
+
+# [application]
+# ip = "127.0.0.1"
+# port = 9090
+
+# [uid]
+# machineid = 8 
+# nodeid = 16
+
+# [mysql]
+# uri = "mysql://companytest:ZNvC5NoLJNnO3Wn0@127.0.0.1:13301/phoenix_stock"
+
+# [redis]
+# uri = "redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7000/,redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7001/,redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7002/,redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7003/,redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7004/,redis://:pl9rz1L0hbOoacesE3Jh@52.131.255.193:7005/" 
+
+# [grpcclient]
+# riskcenterclient = "http://127.0.0.1:60000"
+# # orderrouterclient = "http://172.16.1.9:8887"
+# orderrouterclient = "http://127.0.0.1:9090"
+# assetscenterclient = ""
+# akacenterclient = ""
