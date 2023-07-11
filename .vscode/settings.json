@@ -1,0 +1,7 @@
+{
+  "files.associations": {
+    "*.toml": "toml",
+    "iostream": "cpp",
+    "stdio.h": "c"
+  }
+}

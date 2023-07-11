@@ -1,0 +1,6 @@
+[workspace]
+members = [
+	"sharedfile_1",
+	"sharedfile_2"
+]
+

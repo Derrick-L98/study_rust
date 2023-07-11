@@ -1,0 +1,86 @@
+{
+  "name": "pointless",
+  "version": "1.6.1",
+  "private": true,
+  "description": "An endless drawing canvas.",
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.9.5",
+    "@tauri-apps/api": "^1.2.0",
+    "brotli-unicode": "^1.0.2",
+    "buffer": "^6.0.3",
+    "classnames": "^2.3.2",
+    "d3-ease": "^3.0.1",
+    "d3-shape": "^3.2.0",
+    "dayjs": "^1.11.7",
+    "prop-types": "^15.8.1",
+    "rc-tooltip": "^6.0.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-move": "^6.5.0",
+    "react-redux": "^8.0.5",
+    "react-scripts": "^5.0.1",
+    "uuid": "^9.0.0",
+    "web-vitals": "^3.3.1"
+  },
+  "scripts": {
+    "prepare": "husky install",
+    "start": "cross-env BROWSER=none react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "format": "prettier --write \"src/**/*.js\"",
+    "lint": "eslint \"src/**/*.js\" --fix",
+    "tauri": "tauri"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "prettier"
+    ],
+    "rules": {
+      "no-restricted-globals": "off",
+      "comma-dangle": [
+        "warn",
+        "always-multiline"
+      ],
+      "max-len": "off"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --ext js",
+      "prettier --write"
+    ],
+    "*.{md,html,json}": [
+      "prettier --write"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.6.1",
+    "@commitlint/config-conventional": "^17.6.1",
+    "@tauri-apps/cli": "^1.2.3",
+    "cross-env": "^7.0.3",
+    "eslint-config-prettier": "^8.8.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.2",
+    "prettier": "^2.8.8"
+  }
+}

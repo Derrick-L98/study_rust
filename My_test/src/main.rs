@@ -1,6 +1,13 @@
+#![allow(dead_code, unused_imports)]//功能:没有使用的代码或模块不警告
+#[macro_use]
 extern crate chrono;
 extern crate time;
 extern crate wasm_bindgen_test;
+extern crate anyhow;
+extern crate num_cpus;
+extern crate lazy_static;
+extern crate clap;
+// extern crate log;
 // extern crate sled;
 //extern crate convert_case;
 mod common;
@@ -9,46 +16,55 @@ mod outputcolor;
 mod setting;
 mod sled;
 mod structure;
+mod myyew;
+mod my_thread;
+mod my_gui;
 
+
+use anyhow::Result;
+use anyhow::anyhow;
+use axum::response::Html;
+use cached::async_sync::RwLock;
 use rust_decimal::prelude::*;
 use rust_decimal_macros::dec;
 use std::iter::repeat;
 use std::mem::size_of_val;
+use std::net::SocketAddr;
 use std::sync::Arc;
+use std::thread;
+use std::time::Duration;
+use std::borrow::Borrow;
+use std::collections::HashMap;
+use std::fmt::Write;
 
 use crate::common::SummarizedTickData;
 use crate::common::UidgenService;
 use crate::config::Config;
 
 use self::chrono::prelude::*;
-
 use self::chrono::offset::Local;
-use std::borrow::Borrow;
+use chrono::{DateTime, TimeZone, Utc};
 
-use std::fmt::Write;
 
 use convert_case::{Case, Casing};
 use dashmap::DashMap;
-use std::collections::HashMap;
 
-use chrono::{DateTime, TimeZone, Utc};
 use time::strptime;
-
+use ansi_term::Colour::Red;
 // use time::*;
 
 use std::time::Instant;
 use std::time::*;
-use thread_id::{self};
+// use thread_id::{self};
 
-use std::io;
-use std::thread;
-use std::time::Duration;
+
 
 use tokio::sync::broadcast;
 
 use cached::{Cached, TimedSizedCache};
 use setting::Settings;
-
+use tokio::runtime;
+use myyew::Model;
 // use loom::sync::atomic::AtomicUsize;
 // use loom::sync::atomic::Ordering::{Acquire, Relaxed, Release};
 // use loom::sync::Arc;
@@ -60,8 +76,37 @@ use outputcolor::{console, print_da, write_chars, test as TEST};
 use crate::outputcolor::do_stuff;
 use structure::Structure;
 
+use axum::{
+    routing::get,
+    Router,
+};
+use local_ip_address::local_ip;
+
+// use gtk::prelude::*;
+// use gtk::{glib, Application};
 #[tokio::main]
 async fn main() {
+    // // Create a new application
+    // let app = Application::builder().application_id(APP_ID).build();
+
+    // // Run the application
+    // app.run();
+    
+    
+    // my_gui::my_gui().await;
+    println!("This is in red: {}", Red.paint("a red string"));
+    // yew::start_app::<Model>();
+    // count logical cores this process could try to use
+    let num = num_cpus::get();
+
+    let output = "❄️ 🐼 🚓 👅";
+    println!("{} ========={}",num, output);
+    let s:i32 = format!("{:02}{:02}", 1,20).parse().unwrap();
+    println!("{}", s);
+    // my_thread::thread().await;
+    let my_local_ip = local_ip().unwrap();
+
+    println!("This is my local IP address: {:?}", my_local_ip);
     // p().await;
     // cache().await;
     // mut_no_mut();
@@ -73,7 +118,11 @@ async fn main() {
     // time();
 
     // lock().await;
-    f64_decimal();
+    // f64_decimal();
+    // web().await;
+    Rw().await;
+
+    // println!("{:?}", error().await.as_ref().err().unwrap().to_string());
 
     // channel test
     // tokio_channel().await;
@@ -179,6 +228,75 @@ async fn main() {
     */
 }
 
+
+async fn precision() {
+    let sp: Decimal = dec!(6.5);
+    println!("1:       {}", sp.round_dp_with_strategy(0, RoundingStrategy::MidpointNearestEven));//当一个数字介于另外两个数字之间时，它会向最近的偶数取整。也称为“银行家取整”
+    println!("2:       {}", sp.round_dp_with_strategy(0, RoundingStrategy::MidpointAwayFromZero));//当一个数字介于另外两个数字之间时，它会向离零最近的数字四舍五入
+    println!("3:       {}", sp.round_dp_with_strategy(0, RoundingStrategy::MidpointTowardZero));//当一个数字位于另外两个数字的中间时，它会向接近零的数字四舍五入
+    println!("4:       {}", sp.round_dp_with_strategy(2, RoundingStrategy::ToZero));//数字总是向零四舍五入    X
+    println!("5:       {}", sp.round_dp_with_strategy(2, RoundingStrategy::AwayFromZero));//数字总是从零开始四舍五入   X
+    println!("6:       {}", sp.round_dp_with_strategy(2, RoundingStrategy::ToNegativeInfinity));//数字总是向负无穷大四舍五入   X
+    println!("7:       {}", sp.round_dp_with_strategy(2, RoundingStrategy::ToPositiveInfinity));//数字总是向正无穷大取整    X
+    // println!("8:       {}", sp.round_dp_with_strategy(2, RoundingStrategy::BankersRounding));//当一个数字介于另外两个数字之间时，它会向最近的偶数取整
+    // println!("9:       {}", sp.round_dp_with_strategy(2, RoundingStrategy::RoundHalfUp));//如果值>=5，则向上取整，否则向下取整
+    // println!("10:      {}", sp.round_dp_with_strategy(2, RoundingStrategy::RoundHalfDown));//如果值=<5，则向下取整，否则向上取整
+    // println!("11:      {}", sp.round_dp_with_strategy(2, RoundingStrategy::RoundDown));//向下舍入
+    // println!("12:      {}", sp.round_dp_with_strategy(2, RoundingStrategy::RoundUp));//向上舍入
+}
+
+
+async fn web() {
+    // // build our application with a single route
+    // let app = Router::new().route("/", get(|| async { "Hello, World!" }));
+
+    // println!("================");
+    // // run it with hyper on localhost:3000
+    // axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
+    //     .serve(app.into_make_service())
+    //     .await
+    //     .unwrap();
+    // println!("================");
+
+        // build our application with a route
+    #[derive(Debug)]
+    struct X {
+        a: i32,
+        b: i32,
+    };
+    let mut vec = vec![X{a:1,b:2}];
+    println!("{:#?}", vec);
+    // let _ = vec.iter_mut().map(|x| {x.a = 3; x.b = 4});
+    for x in vec.iter_mut() {
+        x.a = 3; 
+        x.b = 4;
+    }
+    println!("{:#?}", vec);
+    let mut vec2 = vec![1,1,1,1];
+    let vec1 = vec![22,2,2,2];
+    // println!("{:#?}", s);
+    for (i, &mut val) in vec2.iter_mut().enumerate() {
+        if vec1.iter().find(|&&x| x == val).is_none() {
+            continue;
+            // vec2.remove(i);
+        }
+    }
+    println!("{:#?}", vec2);
+    let app = Router::new().route("/", get(handler));
+
+    // run it
+    let addr = SocketAddr::from(([172,16,1,109], 3000));
+    println!("listening on {}", addr);
+    axum::Server::bind(&addr)
+        .serve(app.into_make_service())
+        .await
+        .unwrap();
+}
+
+async fn handler() -> Html<&'static str> {
+    Html("<h1>Hello, World!</h1>")
+}
+
 // 保留小数多少位
 fn meh(float: f64, precision: usize) -> String {
     // compute absolute value
@@ -200,7 +318,7 @@ fn meh(float: f64, precision: usize) -> String {
     //     let n = -(1. + a.log10().floor()) as usize;
     //     println!("位2: {}", n);
     //     precision + n
-    // // special case for 0
+    // // special case for 0   
     // } else {
     //     0
     // };
@@ -223,12 +341,6 @@ async fn ptrc(str: &String) {
     println!("str:   {:p}", str);
 }
 
-async fn p() {
-    let term = Term::stdout();
-    term.write_line("Hello World!").unwrap();
-    thread::sleep(Duration::from_millis(2000));
-    term.clear_line().unwrap();
-}
 
 async fn cache() {
     let mut tickdata_cache2: TimedSizedCache<String, SummarizedTickData> =
@@ -1360,11 +1472,86 @@ fn f64_decimal(){
 
         let s = String::from("❤️");
 
-        for _ in 1..=50 {
-            for _ in 1..=50 {
-                print!("{}", s);
-            }
-            println!();
-        }
+
+        // for _ in 1..=50 {
+        //     for _ in 1..=50 {
+        //         print!("{}", s);
+        //     }
+        //     println!();
+        // }
+
+        let a = 1.0;
+        let b = 0;
+        println!("{}", a / b as f64);
     }
 }
+
+async fn Rw() {
+    let ticks_cache: Arc<RwLock<Vec<String>>> = Arc::new(RwLock::new(Vec::new()));
+    {
+        let mut tick = ticks_cache.write().await;
+        tick.push(format!("=================={}=============", 1));
+
+        for i in 0..50 {
+            tick.push(format!("=================={}=============", i));
+        }
+
+    }
+    {
+        let tick = ticks_cache.write().await;
+        if let Some(s) = tick.iter().find(|&x| x == "==================1=============") {
+            println!("{:#?}", s);
+        }
+
+    }
+    {
+        let mut tick = ticks_cache.write().await;
+        let s = tick.clone();
+        tick.clear();
+        drop(tick);
+        println!("---{:#?}", s);
+    }
+    {
+        let tick = ticks_cache.write().await;
+        println!("{:#?}", tick);
+    }
+}
+
+async fn error() -> Result<()> {
+    let s = "afdafda发达省份的";
+    let now = std::time::Instant::now();
+    println!("persist completed, elapsed1: {:?}", now.elapsed());
+    println!("persist completed, elapsed2: {:?}", now.elapsed());
+    println!("persist completed, elapsed3: {:?}", now.elapsed());
+    println!("persist completed, elapsed4: {:?}", now.elapsed());
+    println!("persist completed, elapsed5: {:?}", now.elapsed());
+    let ab = "20230309,1".to_string();
+    println!("{}", ab.len());
+    // println!("{}", ab);
+    // if ab.rfind("1").is_none() {
+    //    println!("{}", ab); 
+    // }
+    // if ab.rfind("1") != Some(8) {
+    //     println!("===========");
+    // }
+    // // println!("==========={:#?}",ab.as_bytes());
+    // // println!("==========={:#?}",ab.as_bytes()[9] != 49);
+    // if ab.as_bytes()[9] != 49 {
+    //     println!("==========={:#?}",ab.as_bytes());
+    // }
+
+    // // let a = ab[9..1];
+    // // println!("{}", a);
+
+    return Err(anyhow!(s));
+}
+
+
+// #![feature(round_char_boundary)]
+// let s = "❤️🧡💛💚💙💜";
+// assert_eq!(s.len(), 26);
+// assert!(!s.is_char_boundary(13));
+
+// let closest = s.ceil_char_boundary(13);
+// assert_eq!(closest, 14);
+// assert_eq!(&s[..closest], "❤️🧡💛");

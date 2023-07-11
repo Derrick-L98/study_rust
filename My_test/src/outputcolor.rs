@@ -30,6 +30,7 @@ pub async fn console() {
     }
 }
 
+
 pub async fn write_chars() -> io::Result<()> {
     let term = Term::stdout(); //返回新的无缓冲端子
     let (heigth, width) = term.size(); //返回行和列中的终端大小或获取合理的默认值。
