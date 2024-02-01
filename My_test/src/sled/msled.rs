@@ -165,7 +165,7 @@ pub async fn dbcache() {
     for i in db.iter() {
         let s = i.map(|(k,v)|{
             println!("k: {:#?}", String::from_utf8(k.to_vec()).unwrap());
-            // println!("v: {}", String::from_utf8(v.to_vec()).unwrap());
+            println!("v: {}", String::from_utf8(v.to_vec()).unwrap());
             
             let str = String::from_utf8(v.to_vec()).unwrap();
             let val: Value = serde_json::from_str(&str).expect("msg");

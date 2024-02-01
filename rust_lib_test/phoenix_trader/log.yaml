@@ -1,0 +1,61 @@
+# log4rs.yaml
+# d, data 日期, 默认为 ISO 9601 格式, 可以通过 {d(%Y-%m-%d %H:%M:%S.%f)} 这种方式改变日期格
+# l，log 级别
+# h，高亮显示，debug 灰，info 绿，warn 黄，error 红
+# L，line log消息所在行数
+# M，Module log 消息所在模块
+# m，message log 消息
+# n，具体平台的换行符
+# X，mdc 映射诊断环境
+# P，pid - The current process id.
+# t，target - The target of the log message. 可能与 Module 相同
+# T，thread - The name of the current thread. 线程名称
+# I，thread_id - The ID of the current thread. 线程 ID
+
+#日志输出格式
+#pattern: "{d(%Y-%m-%d %H:%M:%S)} {h({l})} {t} {T}-{I} {L} - {M}:{m}{n}"
+
+# 检查配置文件变动的时间间隔
+refresh_rate: 30 seconds
+# appender 负责将日志收集到控制台或文件, 可配置多个
+appenders:
+  stdout: #输出到控制台
+    kind: console
+    encoder:
+      pattern: "{d(%Y-%m-%d %H:%M:%S)} {h({l})} {t} {T}-{I} [{L}] - {m}{n}"
+      # pattern: "{d} {l} {t} {L} - {m}{n}"
+  file: #输出到文件
+    kind: file
+    path: "log/run.log"
+    encoder:
+      # log 信息模式
+      # pattern: "{d(%+)(local)} {h({l})} {M}:{m}{n}"
+      pattern: "{d(%Y-%m-%d %H:%M:%S)} {h({l})} {t} {T}-{I} [{L}] - {m}{n}"
+  roll: #定义rooling_file的appenders
+    kind: rolling_file
+    encoder: #格式配置
+      # pattern: "{d} {l} {t} {L} - {m}{n}" #"{d} {l} {t}  {L} - {m}{n}"
+      pattern: "{d(%Y-%m-%d %H:%M:%S)} {h({l})} {t} {T}-{I} [{L}] - {m}{n}"
+    path: log/run.log
+    policy:
+      kind: compound
+      trigger: # 当文件超过100mb 时触发 rotate
+        kind: size
+        limit: 100 mb
+      roller: # rotate 类型
+        kind: fixed_window
+        pattern: "log/run.log.{}"
+        base: 1 # 压缩日志索引值起点
+        count: 5 # 最大保存压缩文件数
+# 对全局 log 进行配置
+root:
+  level: info #输出的日种子级别
+  appenders:
+    - stdout
+    - roll
+
+# fixed_window 的逻辑稍微有些复杂, 当 log 文件触发 rotate 时 log4rs 会把该文件压缩(需启用 gzip feature) 
+# 然后以 pattern 中定义文件模式并将 {} 插入索引值保存. 以上述配置为例, 文件产生顺序为 compressed-log-0-.log -> compressed-log-1-.log, 
+# 当文件再次触发 rotate 时 log4rs 会删除 compressed-log-0-.log, 然后将 compressed-log-1-.log 重命名为 compressed-log-0-.log, 
+# 最新的 log 压缩文件命名为 compressed-log-1-.log.
+# 注意, 如果压缩文件数量达到最大时, log4rs 会逐个重命名文件, 此时如果 count 的很大, 有可能会造成性能问题.

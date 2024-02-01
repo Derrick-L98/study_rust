@@ -1,0 +1,61 @@
+syntax = "proto3";
+package phoenixordercenter;
+
+service OrderCenterService {
+    rpc PlaceOrder(OrderReq) returns (OrderResp) {}   // 下单
+    rpc CancelOrder(CancelReq) returns (OrderResp) {}   // 撤单
+    rpc ReplenishmentOrder(ReplenishOrderReq) returns (ReplenishOrderResp) {}
+}
+
+//----------------------------------下单请求----------------------------------
+message OrderReq {
+    int64   msg_id         = 1;         // 消息ID
+    int64   unit_id        = 2;         // 用户id
+    int64   stock_id       = 3;         // 证券id
+    int32   order_direction= 4;         // 委托方向  1=买  2=卖
+    int32   order_qty      = 5;         // 订单数量
+    int32   price_type     = 6;         // 价格类型(市价限价)
+    double  order_price    = 7;         // 委托价格
+    int64   operator_no    = 8;         // 操作员
+    int32   order_type     = 9;         // 委托类型 1:app下单  2:跟单  3:风控止盈止损平仓单,4:风控总资产预警平仓单 5:pc客户端单 6:结算平仓单 7:管理端强平仓单,8:app清仓,9:pc清仓,10,管理员平仓,11,合约到期日强平
+    int32   trade_mode     = 10;        // 1:USER(用户直连) 2:AGENT(代理托管)
+    int64   agent_account  = 11;        // 代理账户
+    int64   order_id = 12;
+    // repeated Riskinfo risk_info = 13;
+}
+
+//  下单请求响应
+message OrderResp {
+    int64  msg_id       = 1;          // 与请求消息ID对应
+    int64  order_id     = 2;
+    int32  error_code   = 3;
+    string error_msg    = 4;
+}
+
+
+// TCancelOrder 撤单请求数据类型
+message CancelReq {
+    int64   msg_id         = 1;         // 消息ID
+    int64   unit_id        = 2;         // 用户id
+    int64   order_id       = 3;         // 订单id(撤单用)
+    int64   operator_no    = 4;         // 操作员
+    int32   cancel_type    = 5;          // 撤单类型 1:app撤单  2:pc撤单  3:风控撤单  4:管理员撤单
+    int32   trade_mode     = 6;         // 1:USER(用户直连) 2:AGENT(代理托管)
+    int64   agent_account  = 7;         // 代理账户
+}
+
+message Riskinfo {
+    int64 channel_id = 1;
+    int32 channel_type = 2;
+    int32 order_amount = 3;
+}
+
+message ReplenishOrderReq {
+    OrderReq order = 1;
+    repeated Riskinfo riskinfo = 2;
+}
+
+message ReplenishOrderResp{
+	string 	err_msg  = 1;
+  	int32 	err_code = 2;
+}

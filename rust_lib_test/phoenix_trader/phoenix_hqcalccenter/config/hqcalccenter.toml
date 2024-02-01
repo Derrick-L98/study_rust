@@ -1,0 +1,45 @@
+[application]
+apphost = "127.0.0.1"
+appport = 10001
+
+[cassandra]
+# addr = ""
+username = "uatcass"
+password = "uatcass!2"
+addr = "uat-stock-data.chinaeast2.cloudapp.chinacloudapi.cn:11092"
+# namespace = "stockhqklinedata_kyc"
+
+# addr = "dev-data.chinaeast2.cloudapp.chinacloudapi.cn:11092"
+# namespace = "stockhqklinedata_hk"
+namespace = "test"
+
+[system]
+exchangeno = "HS,XSHE,XSHG"
+quotationserver = "http://uat-stock.chinaeast2.cloudapp.chinacloudapi.cn:50021"#A股
+# quotationserver = "http://127.0.0.1:8765"
+
+# exchangeno = "HK,XHKG"
+# quotationserver = "http://uat-stock.chinaeast2.cloudapp.chinacloudapi.cn:50039"#港股
+# exchangeno = ""
+# quotationserver = "http://uat-stock.chinaeast2.cloudapp.chinacloudapi.cn:50050"#美股
+cassinterval = 12
+channelcap = 204800
+filepath = "FenShiDb"
+
+[quotaiontime.exchange]
+XSHG = ["09:30:00-11:30:00", "13:00:00-15:00:00"] #上交所
+XSHE = ["09:30:00-11:30:00", "13:00:00-15:00:00"] #深交所
+HS = ["09:30:00-11:30:00", "13:00:00-15:00:00"] #A股板块
+# XSHG = "09:30:00-11:30:00,13:00:00-15:00:00"        #A股指数
+# XSHE = "09:30:00-11:30:00,13:00:00-15:00:00"        #A股指数
+XHKG = ["09:30:00-12:00:00", "13:00:00-16:00:00"] #港交所
+HK = ["09:30:00-12:00:00", "13:00:00-16:00:00"] #港股板块
+# SE_HKI = "09:30:00-12:00:00,13:00:00-16:00:00"      #港股指数
+XASE = ["09:30:00-16:00:00"] #美交所
+XNYS = ["09:30:00-16:00:00"] #纽交所
+XNAS = ["09:30:00-16:00:00"] #纳斯达克
+US = ["09:30:00-16:00:00"] #美股板块
+# SE_USI = "09:30:00-16:00:00"                        #美股指数
+
+
+

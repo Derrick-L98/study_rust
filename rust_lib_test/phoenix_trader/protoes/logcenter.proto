@@ -1,0 +1,26 @@
+syntax = "proto3";
+package logcenter;
+// package pb; // 目前线上包名
+
+service LogCenterService{
+    //发送至日志中心
+    rpc PushLog(OMSLogMessage) returns (OMSLogResp){}
+}
+
+// EXCHANGE:  oms_log
+//2017-06-21 14:38:06 [ERR] [server.func] userid=, action=, test=, wait moment ,reason:user_id invalid
+message OMSLogMessage{
+    string log_sid = 1;      // 消息id:各服务内唯一标识
+    string srv_name = 2;     // 服务名
+    int32  log_type = 3;     // 日志类型：1-系统监控日志、2-业务日志
+    int32  log_level = 4;    // 日志等级DBG(debug):0; INF(info):1; WRN(warning):2; ERR(error):3-9;
+    string log_time = 5;     // 日志时间:2006-01-02 15:04:05
+    string log_content = 6;  // 内容, json/text
+}
+
+message OMSLogResp{
+    int32  err_code = 1;
+    string err_msg = 2;
+}
+
+

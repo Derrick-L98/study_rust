@@ -1,0 +1,23 @@
+[package]
+name = "socket"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tokio = { version = "1.32.0", features = ["full"] }
+tokio-stream = { version = "0.1", features = ["net"] }
+async-stream = "0.3"
+tonic = { version = "0.10.2", features = ["tls"] }
+futures-util = "0.3"
+futures = "0.3"
+futures-lite = "1.13"
+prost = "0.12.1"
+prost-types = "0.12.1"
+
+mio = "0.8.8"
+log = { version = "0.4.8", optional = true }
+# [dev-dependencies]
+env_logger = { version = "0.10.0", default-features = false }
+rand = "0.8"

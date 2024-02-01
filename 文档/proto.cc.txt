@@ -1,0 +1,77 @@
+
+.pb.h文件中
+
+
+类还定义了静态方法：
+static const ::google::protobuf::Descriptor* descriptor();//返回类型的描述，包含该类型的信息，包括有什么字段以及类型
+static const OMSLogMessage& default_instance();//返回一个单例模式的OMSLogMessage实例（与新构造的实例相同）所有的字段都是未设置的，所有的重复字段都是空的
+
+void Swap(OMSLogMessage* other);//与另一消息交换信息
+
+void CopyFrom(const ::google::protobuf::Message& from) final;
+void MergeFrom(const ::google::protobuf::Message& from) final;
+void CopyFrom(const OMSLogMessage& from);//用给定消息的值覆盖消息
+void MergeFrom(const OMSLogMessage& from);
+void Clear() final;//将所有元素清空回空状态
+bool IsInitialized() const final;//检查是否所有必填字段都已设置
+
+
+当在一个消息中（嵌套）另一个消息时，编译器就会生成两个类，message A{message B{}}   -> A,A_B
+
+
+
+单个字符串字段
+// string log_sid = 1;
+  void clear_log_sid();//清空字段的值，调用之后，log_sid()返回空string/bytes
+  static const int kLogSidFieldNumber = 1;//字段编号
+  const ::std::string& log_sid() const;//返回字段当前的值，如果字段未设置，则返回空string/bytes
+  void set_log_sid(const ::std::string& value);//设置字段的值，调用后，log_sid()将返回value的拷贝
+  #if LANG_CXX11
+  void set_log_sid(::std::string&& value);//（c++11及之后）设置字段的值，从传入的值中移入，调用之后，log_sid()将返回value的拷贝
+  #endif
+  void set_log_sid(const char* value);//使用C格式的空终止字符串设置字段的值，调用后，log_sid()将返回value的拷贝
+  void set_log_sid(const char* value, size_t size);//如上但使用的给定的大小而不是寻找空终止符。
+  ::std::string* mutable_log_sid();//返回存储字段的可变string对象的指针，若在字段设置之前调用，则返回空字符串，调用之后，log_sid()会将写入值返回给定的字符串
+  ::std::string* release_log_sid();//释放字段的所有权并返回string对象指针，调用之后，调用者将获得已经分配的string对象的所有权，log_sid()返回空string/bytes
+  void set_allocated_log_sid(::std::string* log_sid);//设置字段为给定string对象，若已经存在，则释放之前的字段值，如果string指针非NULL，消息将获取分配的string对象的所有权，消息可以在任何时候删除已分配的string对象，因此对该对象的引用可能无效，另外，若value为NULL，该操作与调用clear_log_sid()相同
+
+单个数值字段
+ // int32 log_type = 3;
+  void clear_log_type();//清空字段的值，调用之后，log_type()会返回0
+  static const int kLogTypeFieldNumber = 3;
+  ::google::protobuf::int32 log_type() const;//返回字段目前的值，如果字段未设置，返回0
+  void set_log_type(::google::protobuf::int32 value);//设置字段的值，调用之后，log_type()会返回value
+
+单个枚举字段
+如
+enum Bar{
+	BAR_VALUE = 0;
+	OTHER_VALUE = 1;
+}
+Bar foo = 1;
+
+编译器会生成如下方法：
+Bar foo() const：//返回字段当前的值。如果未设置，则返回默认值（0）。
+void set_foo(Bar value)：//设置字段的值。调用之后，foo()将放回value。
+void clear_foo()：//清空字段的值。调用之后，foo()返回默认值。
+
+单个内嵌套消息字段
+message Point {
+  int32 latitude = 1;
+  int32 longitude = 2;
+}
+message Rectangle {
+  Point lo = 1;
+  Point hi = 2;
+}
+
+  bool has_lo() const;//
+  void clear_lo();
+  static const int kLoFieldNumber = 1;
+  private:
+  const ::routeguide::Point& _internal_lo() const;
+  public:
+  const ::routeguide::Point& lo() const;
+  ::routeguide::Point* release_lo();
+  ::routeguide::Point* mutable_lo();
+  void set_allocated_lo(::routeguide::Point* lo);

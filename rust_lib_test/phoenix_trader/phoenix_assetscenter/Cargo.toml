@@ -1,0 +1,38 @@
+[package]
+name = "phoenix_assetscenter"
+version = "0.1.0"
+edition = "2021"
+description = "资产中心，包括用户资产，分帐户资产"
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+
+
+[dependencies]
+common = { path = "../common" } 
+utility = {path ="../utility"}
+messagecenter={path="../messagecenter"}
+tonic = "0.8.2"
+prost = "0.11.2"
+
+futures-core = "0.3" 
+futures-util = "0.3"
+tokio = { version = "1", features = ["full"] }
+tokio-stream = "0.1"
+futures = { version = "0.3", default-features = false, features = ["alloc"] }
+async-stream = "0.3"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+rust_decimal = "1"
+
+log="0.4.17"
+log4rs = "1.0"
+sea-orm = { version = "0.10", features = [ "sqlx-mysql", "runtime-tokio-rustls", "macros" ] }
+
+rand = "0.8.5"
+
+anyhow = "^1.0"
+lazy_static = "1.4.0"
+config = "0.13"
+
+[build-dependencies]
+tonic-build = { version = "0.8", features = ["prost"] } 

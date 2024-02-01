@@ -1,0 +1,19 @@
+# 系统风控配置文件
+
+[database]
+uri = "mysql://companytest:ZNvC5NoLJNnO3Wn0@uat-stock-data.chinaeast2.cloudapp.chinacloudapi.cn:13301/phoenix_stock"
+
+[application]
+apphost = "0.0.0.0"
+appport = 6000
+machineid=1
+nodeid=6000
+
+[system]
+logserver = "127.0.0.1:8999"
+aksserver = "finances.metestsvr.com:8998"
+cacheshort = 100000                              #单位秒
+cachelong = 3600                               #单位秒
+persist_interval = 3600                        #数据保存时间间隔，单位秒
+account_total = "1000001"                      #总账户的unit_id
+basic_currency = "USD"                         #基币

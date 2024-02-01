@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package phoenixtickcenter;
+
+import "hqmsg.proto";
+
+service PhoenixTickCenter {
+	// rpc PhoenixTickCenterServer(ContractMsg) returns (hqmsg.YsHqInfo) {}
+    rpc get_tick_hq(TickReq) returns (TickResp) {};				//最新TICK数据
+	rpc get_last_price(LastPriceReq) returns (LastPriceResp) {} //最新价获取
+}
+
+message LastPriceReq 
+{
+    repeated string	contract_nos = 1;		//证券代码 688079_XSHG
+}
+
+message LastPriceResp
+{
+    int32  err_code = 1;
+    string err_msg = 2;
+   repeated hqmsg.YsHqInfo data = 3;
+}
+
+// message PriceInfo
+// {
+//     double  last_price = 1;             //最新价
+//     double  change_rate = 2;            //涨幅
+//     double  change_value = 3;           //涨跌
+// }
+
+message TickReq {
+	string  contract_no = 1;		//合约编号可选
+}
+
+message TickResp {
+	repeated hqmsg.YsHqInfo tick_hq_info = 1; 
+}

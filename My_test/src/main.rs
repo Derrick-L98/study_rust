@@ -19,12 +19,13 @@ mod structure;
 mod myyew;
 mod my_thread;
 mod my_gui;
-
+mod redistest;
+mod socketsub;
 
 use anyhow::Result;
 use anyhow::anyhow;
 use axum::response::Html;
-use cached::async_sync::RwLock;
+use tokio::sync::RwLock;
 use rust_decimal::prelude::*;
 use rust_decimal_macros::dec;
 use std::iter::repeat;
@@ -40,6 +41,7 @@ use std::fmt::Write;
 use crate::common::SummarizedTickData;
 use crate::common::UidgenService;
 use crate::config::Config;
+// use crate::redistest::redisclustertest::RedisClusterClient;
 
 use self::chrono::prelude::*;
 use self::chrono::offset::Local;
@@ -64,7 +66,7 @@ use tokio::sync::broadcast;
 use cached::{Cached, TimedSizedCache};
 use setting::Settings;
 use tokio::runtime;
-use myyew::Model;
+// use myyew::Model;
 // use loom::sync::atomic::AtomicUsize;
 // use loom::sync::atomic::Ordering::{Acquire, Relaxed, Release};
 // use loom::sync::Arc;
@@ -86,6 +88,17 @@ use local_ip_address::local_ip;
 // use gtk::{glib, Application};
 #[tokio::main]
 async fn main() {
+
+    let mut s = HashMap::new();
+    s.insert("1", 1);
+    s.entry("1").or_insert(2);
+    s.entry("1").or_insert(8);
+    println!("{:?}", s);
+    // let s = vec!(1,2,3,4,5);
+    // for a in s {
+    //     println!("{a}");
+    // }
+
     // // Create a new application
     // let app = Application::builder().application_id(APP_ID).build();
 
@@ -97,16 +110,16 @@ async fn main() {
     println!("This is in red: {}", Red.paint("a red string"));
     // yew::start_app::<Model>();
     // count logical cores this process could try to use
-    let num = num_cpus::get();
+    // let num = num_cpus::get();
 
-    let output = "❄️ 🐼 🚓 👅";
-    println!("{} ========={}",num, output);
-    let s:i32 = format!("{:02}{:02}", 1,20).parse().unwrap();
-    println!("{}", s);
-    // my_thread::thread().await;
-    let my_local_ip = local_ip().unwrap();
+    // let output = "❄️ 🐼 🚓 👅";
+    // println!("{} ========={}",num, output);
+    // let s:i32 = format!("{:02}{:02}", 1,20).parse().unwrap();
+    // println!("{}", s);
+    // // my_thread::thread().await;
+    // let my_local_ip = local_ip().unwrap();
 
-    println!("This is my local IP address: {:?}", my_local_ip);
+    // println!("This is my local IP address: {:?}", my_local_ip);
     // p().await;
     // cache().await;
     // mut_no_mut();
@@ -226,6 +239,20 @@ async fn main() {
         }
     });
     */
+
+
+    // let client = RedisClusterClient::new().await;
+    // let now = Instant::now();
+    // let ret = client.get_value(&"order_7085462332042600371".to_string()).await;
+    // println!("cost: {:?}", now.elapsed());
+    // println!("{:#?}", ret.unwrap());
+    
+    // socketsub::sock();
+    // socketsub::sock2();
+
+    if let Err(e) = socketsub::socket3::server().await {
+        println!("{:?}", e);
+    }
 }
 
 
@@ -1314,6 +1341,7 @@ async fn tokio_channel() {
     let mut rx2 = tx2.subscribe();
     let mut rx3 = tx1.subscribe();
     let mut rx4 = tx1.subscribe();
+    let x = rx1.recv();
 
     tokio::spawn(async move {
         for i in 1..10 {
@@ -1335,11 +1363,11 @@ async fn tokio_channel() {
     tokio::spawn(async move {
         loop {
             tokio::select! {
-                task1 = rx1.recv() => {
-                    if let Ok(data) = task1 {
-                        println!("rx1 接收: {}", data);
-                    }
-                }
+                // task1 = rx1.recv() => {
+                //     if let Ok(data) = task1 {
+                //         println!("rx1 接收: {}", data);
+                //     }
+                // }
                 task2 = rx2.recv() => {
                     if let Ok(data) = task2 {
                         println!("rx2 接收: {}", data);
@@ -1399,12 +1427,21 @@ impl SS {
 }
 async fn lock() {
     let uid = Arc::new(tokio::sync::RwLock::new(UidgenService::new(1,1)));
+    let mut id = UidgenService::new(2,1);
+
+    println!("{}", id.get_uid());
+    println!("{}", id.get_uid());
+    println!("{}", id.get_uid());
+    println!("{}", id.get_uid());
+    println!("{}", id.get_uid());
+    println!("{}", id.get_uid());
+
     println!("========={}", size_of_val(&uid));
     let mut w = uid.write().await;
     println!("========={}", size_of_val(&w));
     let mut w = UidgenService::new(1,1);
     println!("========={}", size_of_val(&w));
-    println!("========={}", size_of_val("1111"));
+    println!("========={}", size_of_val("11111"));
     // let s = SS::new().await;
     // let mut w= s.id;
     // println!("1===={:#?}", w.get_uid());
@@ -1515,6 +1552,14 @@ async fn Rw() {
         let tick = ticks_cache.write().await;
         println!("{:#?}", tick);
     }
+    ticks_cache.write().await.push(format!("=================={}=============", 1));
+    ticks_cache.write().await.push(format!("=================={}=============", 2));
+    ticks_cache.write().await.push(format!("=================={}=============", 3));
+    // let mut s = ticks_cache.write().await;
+    // let mut t = ticks_cache.write().await;
+    // let mut p = ticks_cache.read().await;
+    // s.push(format!("=================={}=============", 3));
+    println!("{:#?}", ticks_cache);
 }
 
 async fn error() -> Result<()> {

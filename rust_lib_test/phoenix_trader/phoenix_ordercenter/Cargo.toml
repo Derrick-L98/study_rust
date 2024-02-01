@@ -1,0 +1,53 @@
+[package]
+name = "phoenix_ordercenter"
+version = "0.1.0"
+edition = "2021"
+description = "订单中心"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+utility = { path = "../utility" }
+common = { path = "../common" }
+messagecenter = { path = "../messagecenter" }
+
+tokio = { version = "1.21", features = ["full"] }
+tokio-stream = { version = "0.1", features = ["net"] }
+async-stream = "0.3"
+tonic = { version = "0.8", features = ["tls"] }
+futures-util = "0.3"
+futures = "0.3"
+futures-lite = "1.12"
+prost = "0.11"
+prost-types = "0.11"
+config = "0.13"
+log = "0.4"
+anyhow = "1.0"
+dashmap = "5.3.3"
+# 时间
+chrono = "0.4"
+time = "0.3"
+# 序列化
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = { version = "0.9", optional = true }
+h2 = "0.3"
+# sql
+sea-orm = { version = "0.11.0", features = [ "sqlx-mysql", "runtime-tokio-rustls", "macros" ] }
+# mq
+lapin = { version = "2", default-features = false, features = ["rustls"] }
+# rgb = "0.8.34"
+# console = "0.15.0"
+rust_decimal = "1.28"
+rust_decimal_macros = "1.28"
+[build-dependencies]
+tonic-build = { version = "0.8", features = ["prost"] }
+
+[[bin]]
+name = "s"
+path = "./src/main.rs"
+
+[[bin]]
+name = "t"
+path = "./src/test.rs"
+# # required-features = ["default"]

@@ -1,0 +1,58 @@
+文件写入分为一次性写入和流式写入。流式写入需要打开文件，打开方式有"新建"（create）和"追加"（append）两种。
+一次性写入：
+use std::fs;
+
+
+fn main() {
+    fs::write("D:\\text.txt", "FROM RUST PROGRAM")
+        .unwrap();
+}
+这和一次性读取一样简单方便。执行程序之后， D:\text.txt 文件的内容将会被重写为 FROM RUST PROGRAM 。所以，一次性写入请谨慎使用！因为它会直接删除文件内容（无论文件多么大）。如果文件不存在就会创建文件。
+
+如果想使用流的方式写入文件内容，可以使用 std::fs::File 的 create 方法：
+use std::io::prelude::*;
+use std::fs::File;
+
+fn main() {
+    let mut file = File::create("D:\\text.txt").unwrap();
+    file.write(b"FROM RUST PROGRAM").unwrap();
+}
+这段程序与上一个程序等价。
+//注意：打开的文件一定存放在可变的变量中才能使用 File 的方法！
+
+File 类中不存在 append 静态方法，但是我们可以使用 OpenOptions 来实现用特定方法打开文件：
+use std::io::prelude::*;
+use std::fs::OpenOptions;
+
+fn main() -> std::io::Result<()> {
+   
+    let mut file = OpenOptions::new()
+            .append(true).open("D:\\text.txt")?;
+
+    file.write(b" APPEND WORD")?;
+
+    Ok(())
+}
+运行之后，D:\text.txt 文件内容将变成：
+FROM RUST PROGRAM APPEND WORD
+
+OpenOptions 是一个灵活的打开文件的方法，它可以设置打开权限，除append 权限以外还有 read 权限和 write 权限，如果我们想以读写权限打开一个文件可以这样写：
+use std::io::prelude::*;
+use std::fs::OpenOptions;
+
+fn main() -> std::io::Result<()> {
+   
+    let mut file = OpenOptions::new()
+            .read(true).write(true).open("D:\\text.txt")?;
+
+    file.write(b"COVER")?;
+
+    Ok(())
+}
+运行之后，D:\text.txt 文件内容将变成：
+COVERRUST PROGRAM APPEND   
+
+
+
+
+简单的rpc

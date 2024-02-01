@@ -1,0 +1,11 @@
+[application]
+apphost = "127.0.0.1"
+appport = 9090
+
+[mysql]
+uri = "mysql://companytest:ZNvC5NoLJNnO3Wn0@uat-stock-data.chinaeast2.cloudapp.chinacloudapi.cn:13301/phoenix_stock"
+
+[grpcclient]
+riskcenterclient = "http://uat-stock.chinaeast2.cloudapp.chinacloudapi.cn:60000"
+orderrouterclient = "http://172.16.1.9:8887"
+assetscenterclient = ""

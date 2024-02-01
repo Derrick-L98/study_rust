@@ -1,0 +1,146 @@
+syntax = "proto3";
+
+//资产服务proto文件
+package assetscenter;
+
+service Phoenixassetscenter{
+  rpc phoenix_assets_change(PhoenixassetscenterRequest)returns(PhoenixassetscenterResponse) {}            //资金持仓调整冻结接口
+  rpc phoenix_assets_query(PhoenixassetscenterQueryRequest)returns(PhoenixassetscenterResponse) {}        //资金查询接口
+  rpc phoenix_positions_marginrate_change(PositionMarginRateReq) returns(PositionMarginRateResp){}        //持仓保证金比例发生修改
+  rpc phoenix_positions_price_change(PositionPriceChangeReq) returns(PositionPriceChangeResp){}           //持仓最新价定时持久化修改
+}
+
+message PhoenixassetscenterRequest{
+   int64 message_id=1;//消息id,(短时间内禁止重复申请)
+   int64 operator_id=2;  //操作人信息：操作员id或者用户id
+   int32 business_flag=3;//资金业务大类，参考资金类型.txt
+   int64 unit_id=4; //用户id
+	 repeated PhoenixassetscenterRequestInfo assets = 5;
+   repeated PhoenixassetspostionrequestInfo postions=6;
+} 
+
+message PhoenixassetscenterRequestInfo{
+    double change_amount=1; //变化的金额（或者修改后的信用倍数）必传
+    int32 op_type=2;  //操作类型，101：本金增加，102：本金减少，103：本金冻结，104：本金解冻，105：交易金额临时冻结，106：交易金额临时解冻，901：信用倍数调整，902：创建资产用户
+    int32 flag=3;//   101,102时代表是否出入金的标志，0：否 1：是    ,105,106时代表 是否创业板保证金占用冻结
+    string memo=4;   //备注
+}
+
+message PhoenixassetspostionrequestInfo{
+    int32 op_type=1; //201：持仓增加，202：持仓减少，203：其他冻结解冻操作
+    int32 deal_amount=2; // 变化的数量，此金额必须为正数 或者0， 203时此值为0
+    int64 stock_id=3;//品种id
+    int32 position_flag=4;//多空方向
+    double fee_value=5;//交易币种费用 费用为正数
+    double deal_price=6;//当前交易币种成交价格,
+    int32 qfii_state=7;//1:qf持仓,0:非qf持仓
+    double margin_rate=8;//保证金比例
+    int32 frozen_amount=9;//冻结数量，+为冻结，-为解冻
+    int32 temp_frozen_amount=10;//临时冻结数量 +为冻结，-为解冻
+    int32 prebuy_amount=11;//预买数量 +为加预买。-为减预买
+    int32 presale_amount=12;//预卖数量 +为加预卖。-为减预卖
+    int64 deal_no=13;//成交编号
+}
+
+message  PhoenixassetscenterResponse{
+	int32  ret_code =1;//返回结果
+	string ret_msg = 2;//返回信息
+  repeated PhoenixassetsResult assetsinfo=3;
+  
+}
+
+message PhoenixassetscenterQueryRequest{
+    repeated int64 unit_id=1; //单次最大50个
+    int32 query_type=2;//查询类型 1：资金查询，2：持仓查询，3：资金和持仓查询
+}
+
+message PhoenixassetsResult{
+  int64 unit_id=1;//用户id
+  PhoenixassetsResultInfo assets=2;//资产
+  repeated Phoenixassetspostioninfo positionsinfo=3;//持仓
+}
+
+//资金查询返回
+message PhoenixassetsResultInfo{
+   int64 unit_id=1;//用户id
+   double current_cash=2;//当前本金 对应数据库当前本金字段
+   double frozen_capital=3;//冻结资金
+   double trade_frozen_capital=4;//交易临时冻结
+   double begin_cash=5;//期初本金
+   double cash_in_transit=6;//在途资金
+   string currency_no=7;//币种
+   double credit_multiple=8;//信用倍数
+   double today_deposit=9;//今日入金
+   double today_withdraw=10; //今日出金
+   double total_deposit=11;//总入金
+   double total_withdraw=12;//总出金
+   double last_cash=13;//昨日资金
+   double gem_frozen_capital=14;//创业板挂单保证金占用
+}
+
+//持仓返回
+message Phoenixassetspostioninfo{
+    int64 position_no=1;
+    int64 unit_id=2;//用户id
+    string stock_code=3; //证券代码
+    int64 stock_id=4;//证券id
+    int64 exchange_id=5;//市场ID
+    int32 position_flag=6;//1多 2空
+    int32 begin_amount=7;//期初数量
+    int32 current_amount=8;//当前数量
+    int32 frozen_amount=9;//冻结数量
+    int32 temp_frozen_amount=10;//临时冻结数量
+    int32 buy_amount=11;//今买数量
+    int32 sale_amount=12;//今卖数量
+    int32 prebuy_amount=13;//预买数量
+    int32 presale_amount=14;//预卖数量
+    int32 buy_in_transit=15;//在途持仓数量(买)
+    int32 sale_in_transit=16;//在途持仓数量(卖)
+    int64 channel_id=17;//通道id
+    int32 stock_type=18;//股票类别
+    double margin_rate=19; //保证金比例
+    double total_value=20;//开仓成本;
+    double total_value_hkd=21;//港币开仓成本
+    int32 qfii_amount=22;//qf持仓数量
+    double last_price=23;//最新价
+}
+
+
+message  PhoenixassetspostioninfoResponse{
+	int32 ret_code =1;//返回结果
+	string ret_msg = 2;//返回信息
+  repeated Phoenixassetspostioninfo respinfo=3;
+}
+
+
+message PositionMarginRateReq{
+  repeated PositionMarginRate rates=1;
+}
+
+message PositionMarginRate{
+  int64 unit_id=1;
+  int64 stock_id=2;
+  double margin_rate=3;
+}
+
+
+message PositionMarginRateResp{
+  int32 ret_code =1;//返回结果
+	string ret_msg = 2;//返回信息
+}
+
+
+
+message PositionPriceChangeReq{
+  repeated PositionPriceChangeItemReq list=1; 
+}
+
+message PositionPriceChangeItemReq{
+  int64 stock_id=1;//品种id
+  double last_price=2;//最新价
+}
+
+message PositionPriceChangeResp{
+  int32 ret_code =1;//返回结果
+	string ret_msg = 2;//返回信息
+}

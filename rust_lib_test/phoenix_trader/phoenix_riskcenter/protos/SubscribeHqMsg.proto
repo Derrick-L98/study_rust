@@ -1,0 +1,81 @@
+//行情相关接口文件
+syntax = "proto3";
+
+package hqcenter;
+
+// import "HqMsg.proto";
+
+service SvrPostSubscribeHqMsg{
+  rpc PostSubscribeHqMsg(SubscribeHqMsgReq) returns (ResultMsg) {}	//行情订阅接口
+  rpc PostHistoryKLineHq(KLineHqReq) returns(KLineHqResp){};			//历史K线请求
+  rpc PostCurrentKlineHq(KLineHqReq) returns(KLineHqResp){};			//当前K线
+  rpc PostHistoryFenShiHq (KLineHqReq) returns(KLineHqResp){};		//历史分时
+  rpc PostCurrentFenShiHq (KLineHqReq) returns(KLineHqResp){};		//当前分时
+  rpc PostTickHq(TickHqReq) returns (TickHqResp) {};				//最新TICK数据
+
+  rpc get_last_price(LastPriceMsgReq) returns (LastPriceMsgResp) {} //最新价获取
+}
+
+message SubscribeHqMsgReq {
+	int32		Action = 1;				//动作类型 1：订阅，0：取消订阅。
+	string		Goods = 2;			    //品种代码
+	string		ExchangeNO = 3;			//市场代码
+	string		Contract = 4;			//合约编号
+	string		ID = 5;					//Redis中对应ID
+	string    	CommodityType= 6;		//商品类型，期货为F
+}
+
+// 回复的数据包
+message ResultMsg {
+	string errMsg = 1;
+	int32  errCode = 2;                 //0 代表成功，其他错误码自行定义
+}
+
+message TickHqReq {
+	string  strcontractno = 1;		//合约编号可选
+	int32	iticktype = 2;			//请求行情类型 0:1档行情(默认) 1:5档行情
+	int64   ticktime = 3;        //请求tick时间 unix时间
+	int32   realtime = 4;            //0 延迟行情  1实时行情 
+}
+
+message TickHqResp {
+	// repeated hqmsg.YsHqInfo tickhqinfo = 1;  
+}
+
+//备注:历史K线请求必传：合约编号,结束时间, 条数。当前K线请求：传条数 ,合约 
+//历史分时请求：只传合约编号拼接日期 合约编号值为：合约|日期。 当前分时请求:合约+日期   例如:CL1810|20180910 
+message KLineHqReq {
+	string  strcontractno = 1;		//合约编号
+	string	strklinetype = 2;		//1:一分钟 5:5分钟, 10:10分钟,30: 30分钟, 60：60分钟,24:日线
+	string  strendtime = 3;			//结束时间
+	int32	limit = 4;				//条数
+	int32   realtime = 5;            //0 延迟行情  1实时行情  
+}
+
+message KLineHqResp {
+	repeated KLineHqInfo klineinfo = 1; 
+}
+
+message KLineHqInfo {
+	string strkline = 1;
+}
+
+message LastPriceMsgReq 
+{
+    string	StockCode 		= 1;		//证券代码 60001
+    int32	ExchangeId 	= 2;		//市场 沪深:101 102 港:103 ...
+}
+
+message LastPriceMsgResp
+{
+    int32  ErrCode = 1;
+    string ErrMsg = 2;
+    LastPriceInfo Data = 3;
+}
+
+message LastPriceInfo
+{
+    double  LastPrice = 1;             //最新价
+    double  Change_Rate = 2;            //涨幅
+    double  Change_Value = 3;           //涨跌
+}
