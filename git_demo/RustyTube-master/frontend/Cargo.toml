@@ -1,0 +1,34 @@
+[package]
+name = "frontend"
+version = "0.1.1"
+edition = "2021"
+
+#[dev-dependencies]
+#console_error_panic_hook = { workspace = true }
+
+[dependencies]
+web-sys = { workspace = true }
+wasm-bindgen = { workspace = true }
+wasm-bindgen-cli = { workspace = true }
+wasm-bindgen-futures = { workspace = true }
+js-sys = { workspace = true }
+gloo = { workspace = true }
+reqwasm = { workspace = true }
+urlencoding = {workspace = true }
+
+invidious = { workspace = true }
+rustytube-error = { workspace = true }
+config = { workspace = true }
+utils = { workspace = true }
+
+num-format = { workspace = true }
+
+console_error_panic_hook = { workspace = true }
+
+[dependencies.leptos]
+workspace = true
+features = ["csr", "nightly"]
+
+[dependencies.leptos_router]
+workspace = true
+features = ["csr", "nightly"]

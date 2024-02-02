@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+[data-theme="rustytube"] .btn-ghost {
+  @apply hover:bg-primary;
+}
+
+@layer utilities {
+  .shadow-dropdown {
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 10px;
+  }
+
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
+
+  .fullwindow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100vw;
+    height: 100vh;
+    min-width: 100vw;
+    min-height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
+    overflow: hidden;
+    background-color: black;
+    z-index: 100;
+  }
+}
+
+@layer {
+  * {
+    scrollbar-width: auto !important;
+    scrollbar-color: hsl(var(--bc)) hsl(var(--b1)) !important;
+    -moz-text-size-adjust: none;
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+  }
+
+  ::-webkit-scrollbar {
+    @apply w-2.5;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-neutral;
+    @apply rounded-md;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-neutral/60;
+  }
+}
+
+@layer base {
+  @font-face {
+    font-family: "Comfortaa";
+    src: local(Comfortaa), url("../fonts/comfortaa.woff2");
+  }
+
+  @font-face {
+    font-family: "Fira Mono";
+    src: local(Fira Mono), url("../fonts/fira.woff2");
+  }
+
+  @font-face {
+    font-family: "Poppins";
+    src: local(Poppins), url("../fonts/poppins.woff2");
+  }
+
+  @font-face {
+    font-family: "Open Sans";
+    src: local(Open Sans), url("../fonts/opensans.woff2");
+  }
+
+  @font-face {
+    font-family: "Noto Color Emoji";
+    src: local(Noto Color Emoji), url("https://fonts.gstatic.com/s/notocoloremoji/v1/Yq6P-KqIXTD0t4D9z1ESnKM3-HpFabsE4tq3luCC7p-aXw.0.woff2");
+  }
+}

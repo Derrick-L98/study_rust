@@ -1,0 +1,18 @@
+[package]
+name = "background-jobs"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+actix-web.workspace = true
+
+anyhow = "1"
+apalis = { version = "0.4", features = ["redis"] }
+chrono.workspace = true
+dotenvy.workspace = true
+env_logger.workspace = true
+log.workspace = true
+rand.workspace = true
+serde.workspace = true
+tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
+tokio-util.workspace = true

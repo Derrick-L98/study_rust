@@ -1,0 +1,35 @@
+<!-- TODO: fix me -->
+
+<html>
+<head><title>S3 Upload Test</title></head>
+<body>
+    <form target="/" method="post" enctype="multipart/form-data" id="s3UploadForm">
+        <label>
+            Namespace:
+            <input type="text" name="namespace" value="default" />
+        </label>
+        <input type="file" multiple name="file" />
+        <input type="button" value="Submit" onclick="upload()"></button>
+    </form>
+
+    <script>
+        async function upload() {
+            var $form = document.getElementById('s3UploadForm');
+            var $files = document.getElementsByName('file')[0];
+
+            const formData = new FormData();
+
+            formData.append("namespace", $form.namespace.value);
+
+            for (const file in $files.files) {
+                formData.append("file", file);
+            }
+
+            await fetch(new URL(window.location), {
+                method: 'POST',
+                formData
+            });
+        }
+    </script>
+</body>
+</html>

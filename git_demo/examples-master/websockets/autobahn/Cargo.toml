@@ -1,0 +1,16 @@
+[package]
+name = "websocket-autobahn"
+version = "1.0.0"
+edition = "2021"
+
+[[bin]]
+name = "websocket-autobahn-server"
+path = "src/main.rs"
+
+[dependencies]
+actix.workspace = true
+actix-web.workspace = true
+actix-web-actors.workspace = true
+
+env_logger.workspace = true
+log.workspace = true

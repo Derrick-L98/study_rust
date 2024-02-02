@@ -1,0 +1,20 @@
+[package]
+name = "juniper-advanced"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+actix-web.workspace = true
+actix-web-lab.workspace = true
+actix-cors.workspace = true
+
+juniper = "0.15.10"
+
+mysql = "24"
+r2d2 = "0.8"
+r2d2_mysql = "24"
+
+dotenvy.workspace = true
+env_logger.workspace = true
+log.workspace = true
+uuid = { version = "1", features = ["v4", "serde"] }

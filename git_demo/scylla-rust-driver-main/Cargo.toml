@@ -1,0 +1,9 @@
+[workspace]
+members = [
+    "examples",
+    "scylla",
+    "scylla-macros",
+    "scylla-cql",
+    "scylla-proxy",
+]
+resolver = "2"

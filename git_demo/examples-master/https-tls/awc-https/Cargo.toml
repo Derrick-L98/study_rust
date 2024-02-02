@@ -1,0 +1,14 @@
+[package]
+name = "awc_https"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+actix-web.workspace = true
+awc = { workspace = true, features = ["rustls-0_21"] }
+
+env_logger.workspace = true
+log.workspace = true
+mime = "0.3"
+rustls.workspace = true
+webpki-roots = "0.25"

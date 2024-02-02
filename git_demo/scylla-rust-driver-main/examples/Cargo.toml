@@ -1,0 +1,115 @@
+[package]
+edition = "2021"
+name = "examples"
+publish = false
+version = "0.0.0"
+
+[dev-dependencies]
+anyhow = "1.0.33"
+futures = "0.3.6"
+openssl = "0.10.32"
+rustyline = "9"
+rustyline-derive = "0.6"
+scylla = {path = "../scylla", features = ["ssl", "cloud", "chrono", "time"]}
+tokio = {version = "1.1.0", features = ["full"]}
+tracing = "0.1.25"
+tracing-subscriber = { version = "0.3.14", features = ["env-filter"] }
+chrono = { version = "0.4", default-features = false }
+time = { version = "0.3.22" }
+uuid = "1.0"
+tower = "0.4"
+stats_alloc = "0.1"
+clap = { version = "3.2.4", features = ["derive"] }
+
+[[example]]
+name = "auth"
+path = "auth.rs"
+
+[[example]]
+name = "basic"
+path = "basic.rs"
+
+[[example]]
+name = "logging"
+path = "logging.rs"
+
+[[example]]
+name = "tls"
+path = "tls.rs"
+
+[[example]]
+name = "cqlsh-rs"
+path = "cqlsh-rs.rs"
+
+[[example]]
+name = "parallel"
+path = "parallel.rs"
+
+[[example]]
+name = "parallel-prepared"
+path = "parallel-prepared.rs"
+
+[[example]]
+name = "compare-tokens"
+path = "compare-tokens.rs"
+
+[[example]]
+name = "select-paging"
+path = "select-paging.rs"
+
+[[example]]
+name = "user-defined-type"
+path = "user-defined-type.rs"
+
+[[example]]
+name = "cql-time-types"
+path = "cql-time-types.rs"
+
+[[example]]
+name = "tracing"
+path = "tracing.rs"
+
+[[example]]
+name = "schema_agreement"
+path = "schema_agreement.rs"
+
+[[example]]
+name = "speculative-execution"
+path = "speculative-execution.rs"
+
+[[example]]
+name = "get_by_name"
+path = "get_by_name.rs"
+
+[[example]]
+name = "value_list"
+path = "value_list.rs"
+
+[[example]]
+name = "custom_load_balancing_policy"
+path = "custom_load_balancing_policy.rs"
+
+[[example]]
+name = "custom_deserialization"
+path = "custom_deserialization.rs"
+
+[[example]]
+name = "tower"
+path = "tower.rs"
+
+[[example]]
+name = "allocations"
+path = "allocations.rs"
+
+[[example]]
+name = "query_history"
+path = "query_history.rs"
+
+[[example]]
+name = "cloud"
+path = "cloud.rs"
+
+
+[[example]]
+name = "execution_profile"
+path = "execution_profile.rs"

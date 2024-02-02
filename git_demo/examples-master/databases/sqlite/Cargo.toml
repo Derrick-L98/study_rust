@@ -1,0 +1,15 @@
+[package]
+name = "db-sqlite"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+actix-web.workspace = true
+
+env_logger.workspace = true
+futures-util.workspace = true
+log.workspace = true
+r2d2 = "0.8"
+r2d2_sqlite = "0.22"
+rusqlite = "0.29"
+serde.workspace = true

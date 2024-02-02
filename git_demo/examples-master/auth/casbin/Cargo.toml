@@ -1,0 +1,11 @@
+[package]
+name = "actix-casbin-example"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+actix-web.workspace = true
+
+casbin = "2"
+env_logger.workspace = true
+tokio.workspace = true

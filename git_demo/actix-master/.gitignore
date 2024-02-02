@@ -1,0 +1,13 @@
+Cargo.lock
+/gh-pages
+__pycache__
+
+*.so
+*.out
+*.pyc
+*.pid
+*.sock
+*~
+target/
+actix/examples/chat/target/
+.idea

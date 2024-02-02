@@ -1,0 +1,17 @@
+[package]
+name = "redis-session-example"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+actix-web.workspace = true
+actix-session = { workspace = true, features = ["redis-actor-session"] }
+
+env_logger.workspace = true
+log.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+
+[dev-dependencies]
+actix-test.workspace = true
+time = "0.3"

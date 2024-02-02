@@ -1,0 +1,15 @@
+[package]
+name = "multipart-example"
+version = "1.0.0"
+description = "Simple file uploader in Actix Web with Async/Await"
+edition.workspace = true
+
+[dependencies]
+actix-multipart.workspace = true
+actix-web.workspace = true
+
+env_logger.workspace = true
+futures-util.workspace = true
+log.workspace = true
+sanitize-filename = "0.5"
+uuid = { version = "1", features = ["v4"] }

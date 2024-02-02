@@ -1,0 +1,25 @@
+{
+    "cSpell.words": [
+        "actix",
+        "apalis",
+        "askama",
+        "autoclean",
+        "autoreload",
+        "chrono",
+        "dotenv",
+        "dotenvy",
+        "graphiql",
+        "minijinja",
+        "nocapture",
+        "oneshot",
+        "pemfile",
+        "prost",
+        "protobuf",
+        "rustls",
+        "rustup",
+        "sqlx",
+        "tera",
+        "tmpl",
+        "websockets"
+    ]
+}

@@ -1,0 +1,71 @@
+[package]
+name = "scylla"
+version = "0.11.1"
+edition = "2021"
+description = "Async CQL driver for Rust, optimized for Scylla, fully compatible with Apache Cassandra™"
+repository = "https://github.com/scylladb/scylla-rust-driver"
+readme = "../README.md"
+keywords = ["database", "scylla", "cql", "cassandra"]
+categories = ["database"]
+license = "MIT OR Apache-2.0"
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[features]
+default = []
+ssl = ["dep:tokio-openssl", "dep:openssl"]
+cloud = ["ssl", "scylla-cql/serde", "dep:serde_yaml", "dep:serde", "dep:url", "dep:base64"]
+secret = ["scylla-cql/secret"]
+chrono = ["scylla-cql/chrono"]
+time = ["scylla-cql/time"]
+full-serialization = ["chrono", "time", "secret"]
+
+[dependencies]
+scylla-macros = { version = "0.3.0", path = "../scylla-macros" }
+scylla-cql = { version = "0.0.11", path = "../scylla-cql" }
+byteorder = "1.3.4"
+bytes = "1.0.1"
+futures = "0.3.6"
+histogram = "0.6.9"
+num_enum = "0.6"
+tokio = { version = "1.27", features = ["net", "time", "io-util", "sync", "rt", "macros"] }
+snap = "1.0"
+uuid = { version = "1.0", features = ["v4"] }
+rand = "0.8.3"
+thiserror = "1.0"
+itertools = "0.11.0"
+bigdecimal = "0.2.0"
+num-bigint = "0.3"
+tracing = "0.1.36"
+chrono = { version = "0.4.20", default-features = false, features = ["clock"] }
+openssl = { version = "0.10.32", optional = true }
+tokio-openssl = { version = "0.6.1", optional = true }
+arc-swap = "1.3.0"
+dashmap = "5.2"
+strum = "0.23"
+strum_macros = "0.23"
+lz4_flex = { version = "0.11.1" }
+smallvec = "1.8.0"
+async-trait = "0.1.56"
+serde = { version = "1.0", features = ["derive"], optional = true }
+serde_yaml = { version = "0.9.14", optional = true }
+url = { version = "2.3.1", optional = true }
+base64 = { version = "0.21.1", optional = true }
+rand_pcg = "0.3.1"
+socket2 = { version = "0.5.3", features = ["all"] }
+
+[dev-dependencies]
+scylla-proxy = { version = "0.0.3", path = "../scylla-proxy" }
+ntest = "0.9.0"
+criterion = "0.4" # Note: v0.5 needs at least rust 1.70.0
+tokio = { version = "1.27", features = ["test-util"] }
+tracing-subscriber = { version = "0.3.14", features = ["env-filter"] }
+assert_matches = "1.5.0"
+rand_chacha = "0.3.1"
+time = "0.3"
+
+[[bench]]
+name = "benchmark"
+harness = false

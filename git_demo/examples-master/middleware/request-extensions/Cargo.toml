@@ -1,0 +1,10 @@
+[package]
+name = "middleware-request-extensions"
+version = "1.0.0"
+publish.workspace = true
+edition.workspace = true
+
+[dependencies]
+actix-web.workspace = true
+log.workspace = true
+env_logger.workspace = true

@@ -1,0 +1,19 @@
+[package]
+name = "websocket-chat-broker"
+version = "1.0.0"
+edition = "2021"
+
+[[bin]]
+name = "server"
+path = "src/main.rs"
+
+[dependencies]
+actix.workspace = true
+actix-broker.workspace = true
+actix-files.workspace = true
+actix-web.workspace = true
+actix-web-actors.workspace = true
+
+env_logger.workspace = true
+log.workspace = true
+rand.workspace = true

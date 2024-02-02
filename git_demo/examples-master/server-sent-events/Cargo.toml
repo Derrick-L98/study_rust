@@ -1,0 +1,14 @@
+[package]
+name = "server-sent-events"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+actix-web.workspace = true
+actix-web-lab.workspace = true
+env_logger.workspace = true
+futures-util.workspace = true
+log.workspace = true
+parking_lot = "0.12"
+tokio = { workspace = true, features = ["sync"] }
+tokio-stream.workspace = true

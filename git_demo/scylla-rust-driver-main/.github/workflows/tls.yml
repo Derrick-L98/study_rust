@@ -1,0 +1,39 @@
+name: SSL
+
+on:
+  push:
+    branches:
+    - main
+    - 'branch-*'
+  pull_request:
+    branches:
+    - main
+    - 'branch-*'
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: full
+
+jobs:
+  tls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    services:
+      scylladb:
+        image: scylladb/scylla-tls
+        ports:
+          - 9042:9042
+          - 9142:9142
+        options:
+          --health-cmd "cqlsh --debug"
+          --health-interval 5s
+          --health-retries 10
+    env:
+      working-directory: ./scylla
+    steps:
+    - uses: actions/checkout@v3
+    - name: Check
+      run: cargo check --verbose --features "ssl"
+      working-directory: ${{env.working-directory}}
+    - name: Run tls example
+      run: cargo run --example tls

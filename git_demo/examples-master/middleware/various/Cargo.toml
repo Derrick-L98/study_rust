@@ -1,0 +1,15 @@
+[package]
+name = "middleware-various"
+version = "1.0.0"
+publish.workspace = true
+edition.workspace = true
+
+[dependencies]
+actix-http.workspace = true
+actix-web.workspace = true
+actix-web-lab.workspace = true
+
+env_logger.workspace = true
+futures-util.workspace = true
+log.workspace = true
+pin-project = "1"

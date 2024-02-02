@@ -1,0 +1,25 @@
+[package]
+name = "websocket"
+version = "1.0.0"
+edition = "2021"
+
+[[bin]]
+name = "websocket-server"
+path = "src/main.rs"
+
+[[bin]]
+name = "websocket-client"
+path = "src/client.rs"
+
+[dependencies]
+actix.workspace = true
+actix-files.workspace = true
+actix-web.workspace = true
+actix-web-actors.workspace = true
+awc.workspace = true
+
+env_logger.workspace = true
+futures-util = { workspace = true, features = ["sink"] }
+log.workspace = true
+tokio = { workspace = true, features = ["full"] }
+tokio-stream = "0.1.8"

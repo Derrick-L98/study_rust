@@ -1,0 +1,39 @@
+# This workflow builds the book with documentation and runs book tests
+name: Book
+
+on:
+  push:
+    branches:
+    - main
+    - 'branch-*'
+  pull_request:
+    branches:
+    - main
+    - 'branch-*'
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: full
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      scylladb:
+        image: scylladb/scylla
+        ports:
+          - 9042:9042
+        options: --health-cmd "cqlsh --debug scylladb" --health-interval 5s --health-retries 10
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install mdbook
+      run: cargo install mdbook --no-default-features
+    - name: Build the project
+      run: cargo build --verbose --examples
+    - name: Build the book
+      run: mdbook build docs
+    - name: Build the book using the script
+      run: python3 docs/build_book.py
+    - name: Run book tests
+      run: mdbook test -L target/debug/deps docs
