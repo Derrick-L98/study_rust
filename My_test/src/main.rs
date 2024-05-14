@@ -7,6 +7,7 @@ extern crate anyhow;
 extern crate num_cpus;
 extern crate lazy_static;
 extern crate clap;
+extern crate bindgen;
 // extern crate log;
 // extern crate sled;
 //extern crate convert_case;
@@ -124,7 +125,7 @@ async fn main() {
     // cache().await;
     // mut_no_mut();
     // dash_map();
-    // naive_date_time();
+    naive_date_time();
     // performance();
     // hash_map();
     // vec();
@@ -133,7 +134,7 @@ async fn main() {
     // lock().await;
     // f64_decimal();
     // web().await;
-    Rw().await;
+    // Rw().await;
 
     // println!("{:?}", error().await.as_ref().err().unwrap().to_string());
 
@@ -250,9 +251,9 @@ async fn main() {
     // socketsub::sock();
     // socketsub::sock2();
 
-    if let Err(e) = socketsub::socket3::server().await {
-        println!("{:?}", e);
-    }
+    // if let Err(e) = socketsub::socket3::server().await {
+    //     println!("{:?}", e);
+    // }
 }
 
 
@@ -557,25 +558,29 @@ pub fn naive_date_time() {
     let now = Local::now().timestamp_millis();
     println!("{}", now);
     //给定字符串构造时间结构
-    let _time_uct: DateTime<Utc> = ("2022-05-05 14:21:48.000".to_owned() + "Z")
+    let mut time_uct: DateTime<Utc> = ("2022-05-05 14:21:48.000".to_owned() + "Z")
         .parse()
         .unwrap(); //正常
-        // println!("{}", _time_uct);
-        // println!("{:?}", _time_uct);
+        // println!("{}", _time_uct);//2022-05-05 14:21:48 UTC
+        // println!("{:?}", _time_uct);//2022-05-05T14:21:48Z
+        let data = time_uct.naive_local();
+        println!("1====={}", data); //2022-05-05 14:21:48
+        println!("2====={:?}", data); //2022-05-05T14:21:48
+        println!("3====={}\n", data.and_utc().timestamp()); //时间戳1651760508 2022-05-05 22:21:48
     let time: DateTime<Local> = ("2022-05-05 14:21:48.000".to_owned() + "Z")
         .parse()
         .unwrap();
-        // println!("{}", time);
-        // println!("{:?}", time);
+        // println!("{}", time);//2022-05-05 22:21:48 +08:00
+        // println!("{:?}", time);//2022-05-05T22:21:48+08:00
     let data = time.naive_local();
-    println!("{}", data); //2022-05-05 22:21:48
-    println!("{:?}", data); //2022-05-05T22:21:48
-    println!("{}\n", data.timestamp()); //时间戳
+    println!("1====={}", data); //2022-05-05 22:21:48
+    println!("2====={:?}", data); //2022-05-05T22:21:48
+    println!("3====={}\n", data.and_utc().timestamp()); //时间戳1651789308 2022-05-06 06:21:48
 
     let mut dt =
         NaiveDateTime::parse_from_str("2022-05-05 14:21:48", "%Y-%m-%d %H:%M:%S%.3f").unwrap();
     println!("2022-05-05 14:21:48 ---> NaiveDateTime: {}", dt); //2022-05-05 14:21:48
-    println!("时间戳: {}", dt.timestamp()); //时间戳
+    println!("时间戳: {}", dt.and_utc().timestamp()); //时间戳
                                             // println!("周几: {:#?}", dt.iso_week());
 
     dt = dt
@@ -611,9 +616,11 @@ pub fn naive_date_time() {
         println!("1651760508 ---> NaiveDateTime: {}\n", ps);
     }
 
-    let cop = chrono::Local::now().naive_local();
+    let cop = chrono::Local::now().naive_utc();
+    // let cop = chrono::Local::now().naive_local();//多北京时间8小时
     println!("current ---> NaiveDateTime: {}", cop);
-    println!("current ---> 时间戳: {}\n", cop.timestamp());
+    // println!("current ---> 时间戳: {}\n", cop.timestamp());//0.4.35版本过后起, 不推荐使用,推荐使用下面的方式
+    println!("current ---> 时间戳: {}\n", cop.and_utc().timestamp());
 
     let sss = cop.format("%Y%m%d%H%M").to_string();
     let d = cop.format("%Y%m%d").to_string();

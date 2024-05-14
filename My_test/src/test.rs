@@ -7,6 +7,7 @@ extern crate anyhow;
 extern crate num_cpus;
 extern crate lazy_static;
 extern crate clap;
+extern crate bindgen;
 // extern crate log;
 // extern crate sled;
 //extern crate convert_case;

@@ -1,12 +1,13 @@
 [package]
+build = "build.rs"
 name = "My_test"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
-time = "0.1.45"
-chrono = "0.4.31"
+time = "0.1.45"#不升级
+chrono = "0.4.38"
 libc = { version = "0.2.149", optional = true }
 js-sys = { version = "0.3", optional = true } # contains FFI bindings for the JS Date API
 convert_case = "0.6.0"
@@ -22,10 +23,10 @@ tokio = { version = "1.33", features = [
     "net",
     "full"
 ] }
-async-channel = "1.9.0"
+async-channel = "2.2.0"
 # serde = "1.0"
-config = "0.13.3"
-cached = "0.46.0"
+config = "0.14.0"
+cached = "0.51.3"
 console = "0.15.7"
 # loom = "0.5.6"
 anyhow = "1.0"
@@ -34,19 +35,19 @@ vsdbsled = "0.34.7-p1"
 sled = "0.34.7"
 zerocopy = "0.7.11"
 byteorder = "1.5.0"
-local-ip-address = "0.5.6"
+local-ip-address = "0.6.0"
 # 序列化
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 lazy_static = "1.4"
 rust_decimal = "1.32.0"
 rust_decimal_macros = "1.32.0"
-axum = "0.6.20"
-hyper = "0.14"
+axum = "0.6.20"#不升级
+hyper = "1.1.0"
 # yew 就是一个rust的前端框架。通过一系列工具链把rust代码编译成wasm运行在浏览器中。
-yew = "0.20.0"
+yew = "0.21.0"
 
-wasm_thread = "0.2.0"
+wasm_thread = "0.3.0"
 num_cpus = "1.16.0"
 ansi_term = "0.12.1"#Library for ANSI terminal colours and styles (bold, underline)
 termcolor = "1.3.0"
@@ -54,8 +55,8 @@ termcolor = "1.3.0"
 # mio = "0.8.6"
 # tikv-client = "0.1.0"
 # GUI
-iced = "0.10.0"
-egui = "0.22.0"
+iced = "0.12.0"
+egui = "0.27.2"
 fltk = { version = "^1.4", features = ["fltk-bundled"] }
 fltk-table = "0.3.1"
 # gtk = "0.17.1"
@@ -63,13 +64,14 @@ clap = "4.4.6"
 tauri = "1.5.2"
 
 # redis
-redis = { version = "0.23.3", features = ["tokio-comp", "cluster", "r2d2"] }
+redis = { version = "0.25.3", features = ["tokio-comp", "cluster", "r2d2"] }
 redis_cluster_async = "0.8.1"
 mobc-redis-cluster = "0.1.1"
 mobc-redis = "0.8.0"
 mobc = "0.8.2"
 EventEmitter = "0.0.4"
 
+bindgen = "0.69.4"
 # redis = { version = "0.21", features = ["tokio-comp", "cluster", "r2d2"] }
 # redis_cluster_async = "0.7"
 # mobc-redis-cluster = "0.1.1"
